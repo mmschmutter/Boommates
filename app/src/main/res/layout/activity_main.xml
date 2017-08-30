@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/dashboard"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:padding="10dp">
+
+        <android.support.constraint.Guideline
+            android:id="@+id/horizontal_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.5" />
+
+        <TextView
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:textColor="@color/colorText"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="Your task for this week" />
+
+        <TextView
+            android:id="@+id/your_chore_banner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-light"
+            android:textColor="@color/colorText"
+            android:textSize="50sp"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/header"
+            tools:text="Sweep" />
+
+        <ImageView
+            android:id="@+id/first_x"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintLeft_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/your_chore_banner"
+            tools:src="@drawable/boom_x" />
+
+        <ImageView
+            android:id="@+id/second_x"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="15dp"
+            android:adjustViewBounds="true"
+            app:layout_constraintLeft_toRightOf="@id/first_x"
+            app:layout_constraintRight_toLeftOf="@+id/horizontal_middle"
+            app:layout_constraintTop_toBottomOf="@+id/your_chore_banner"
+            tools:src="@drawable/boom_x_empty" />
+
+        <ImageView
+            android:id="@+id/fourth_x"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            app:layout_constraintRight_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/your_chore_banner"
+            tools:src="@drawable/boom_x_empty" />
+
+        <ImageView
+            android:id="@+id/third_x"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginStart="15dp"
+            app:layout_constraintLeft_toRightOf="@+id/horizontal_middle"
+            app:layout_constraintRight_toLeftOf="@id/fourth_x"
+            app:layout_constraintTop_toBottomOf="@+id/your_chore_banner"
+            tools:src="@drawable/boom_x_empty" />
+
+        <TextView
+            android:id="@+id/timer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textColor="@color/colorText"
+            android:textSize="20sp"
+            app:layout_constraintLeft_toRightOf="@+id/first_x"
+            app:layout_constraintRight_toLeftOf="@+id/fourth_x"
+            app:layout_constraintTop_toBottomOf="@+id/second_x" />
+
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/chore_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/dashboard"
+        android:scrollbars="vertical" />
+
+    <ProgressBar
+        android:id="@+id/progress_main_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/chore_view"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ProgressBar
+        android:id="@+id/progress_main_bottom"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@id/dashboard"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>

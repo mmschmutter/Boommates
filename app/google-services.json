@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "479835158134",
+    "firebase_url": "https://boommates-11efe.firebaseio.com",
+    "project_id": "boommates-11efe",
+    "storage_bucket": "boommates-11efe.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:479835158134:android:179ba109774a9cfd",
+        "android_client_info": {
+          "package_name": "com.boommates.boommates"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "479835158134-g9eq45vfik509urj8rqit29se83es7o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.boommates.boommates",
+            "certificate_hash": "27501c906cf324f274186911af35d5d07ac94442"
+          }
+        },
+        {
+          "client_id": "479835158134-f784oapl13nt9bkv0easibf6j2d781of.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDuiebnGIojmrL-er_CtBwf5YRGMrrdOyw"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "479835158134-f784oapl13nt9bkv0easibf6j2d781of.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

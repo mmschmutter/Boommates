@@ -1,0 +1,46 @@
+<resources>
+    <string name="app_name">BOOMmates</string>
+    <string name="header">Your task for this week</string>
+    <string name="boom">BOOM</string>
+
+    <!-- Strings related to login -->
+    <string name="minimum_password">Password too short (6 character minimum)</string>
+    <string name="auth_failed">Invalid email and password combination</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+    <string name="btn_login">LOGIN</string>
+    <string name="btn_link_to_login">Already registered? Login!</string>
+    <string name="btn_sign_out">SIGN OUT</string>
+    <string name="btn_sign_up">SIGN UP</string>
+    <string name="err_msg_email">Please enter a valid email</string>
+    <string name="err_msg_required">Required field</string>
+    <string name="err_msg_password">Please enter a valid password (6 character minimum)</string>
+    <string name="btn_link_to_signup">Don\'t have an account? Sign up!</string>
+    <string name="successful_registration">Registration successful!</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="err_msg_password_match">Passwords do not match</string>
+    <string name="failed_registration">An account associated with that email already exists</string>
+
+    <!-- Strings related to menu -->
+    <string name="menu_edit_list">Edit Task List</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_group_settings">Group Settings</string>
+    <string name="prompt_add_chore">Enter name of new task</string>
+    <string name="remove">REMOVE</string>
+
+    <string name="created_group">New group associated with your account</string>
+    <string name="btn_existing_apt">JOIN EXISTING GROUP</string>
+    <string name="btn_new_apt">CREATE NEW GROUP</string>
+    <string name="hint_apt">Roommate\'s Email</string>
+    <string name="chooser_directions">Join a group one of your roommates created or create a new group for you and your roommates</string>
+    <string name="join_directions">Enter email of roommate who created the group</string>
+    <string name="err_chore_exists">A task with that name already exists</string>
+    <string name="err_msg_group_id">No group associated with that email</string>
+    <string name="create_account_directions">Create a new account</string>
+    <string name="first_x_explanation">First Warning BOOM\nThis BOOM will disappear if you do not receive another BOOM within 24 hours</string>
+    <string name="second_x_explanation">Second Warning BOOM\nAfter receiving this BOOM you will have a 24 hour grace period to complete your task after which you will be vulnerable to receiving final BOOMs</string>
+    <string name="third_x_explanation">First Final BOOM\nYou are vulnerable to receiving final BOOMs for 24 hours after your grace period, after 24 hours all your BOOMs are reset</string>
+    <string name="fourth_x_explanation">Second Final BOOM\nYou will be charged upon receiving this BOOM</string>
+    <string name="err_num_chores">Cannot add more tasks than number of group members</string>
+    <string name="no_chore">🎉 Nothing! 🎉</string>
+</resources>
