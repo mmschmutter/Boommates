@@ -36,7 +36,7 @@ public class SignupActivity extends AppCompatActivity {
     private Button btnSignUp, btnLinkToLogIn;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private DatabaseReference boommatesDB, userList;
+    private DatabaseReference boommatesDB;
     private EditText signupInputEmail, signupInputPassword, signupInputConfirmPassword;
     private TextInputLayout signupInputLayoutEmail, signupInputLayoutPassword, signupInputLayoutConfirmPassword;
 
@@ -45,9 +45,9 @@ public class SignupActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
+        getSupportActionBar().setTitle(getString(R.string.signup_title));
         auth = FirebaseAuth.getInstance();
         boommatesDB = FirebaseDatabase.getInstance().getReference();
-        userList = FirebaseDatabase.getInstance().getReference("users");
 
         directions = (TextView) findViewById(R.id.signup_directions);
         directions.setText(R.string.create_account_directions);

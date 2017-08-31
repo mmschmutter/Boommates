@@ -48,6 +48,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chore_manager);
+        getSupportActionBar().setTitle(getString(R.string.chore_manager_title));
         progressBar = (ProgressBar) findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();

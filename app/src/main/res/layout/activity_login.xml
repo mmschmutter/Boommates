@@ -50,7 +50,7 @@
         android:layout_marginTop="15dp"
         android:background="@color/colorPrimaryDark"
         android:text="@string/btn_login"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/colorText" />
 
     <Button
         android:id="@+id/btn_link_signup"

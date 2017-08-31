@@ -8,9 +8,9 @@
     <string name="auth_failed">Invalid email and password combination</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
-    <string name="btn_login">LOGIN</string>
-    <string name="btn_link_to_login">Already registered? Login!</string>
-    <string name="btn_sign_out">SIGN OUT</string>
+    <string name="btn_login">LOG IN</string>
+    <string name="btn_link_to_login">Already registered? Log in!</string>
+    <string name="btn_logout">LOG OUT</string>
     <string name="btn_sign_up">SIGN UP</string>
     <string name="err_msg_email">Please enter a valid email</string>
     <string name="err_msg_required">Required field</string>
@@ -23,7 +23,7 @@
 
     <!-- Strings related to menu -->
     <string name="menu_edit_list">Edit Task List</string>
-    <string name="menu_logout">Logout</string>
+    <string name="menu_logout">Log Out</string>
     <string name="menu_group_settings">Group Settings</string>
     <string name="prompt_add_chore">Enter name of new task</string>
     <string name="remove">REMOVE</string>
@@ -43,4 +43,9 @@
     <string name="fourth_x_explanation">Second Final BOOM\nYou will be charged upon receiving this BOOM</string>
     <string name="err_num_chores">Cannot add more tasks than number of group members</string>
     <string name="no_chore">🎉 Nothing! 🎉</string>
+    <string name="group_settings_title">Group Settings</string>
+    <string name="login_title">Log In</string>
+    <string name="signup_title">Sign Up</string>
+    <string name="join_group_title">Join Group</string>
+    <string name="chore_manager_title">Manage Tasks</string>
 </resources>

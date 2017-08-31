@@ -547,7 +547,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
                 break;
             case R.id.action_group_settings:
-                startActivity(new Intent(MainActivity.this, GroupChooserActivity.class));
+                startActivity(new Intent(MainActivity.this, GroupSettingsActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);

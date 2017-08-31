@@ -33,6 +33,7 @@ public class GroupChooserActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chooser);
+        getSupportActionBar().setTitle(getString(R.string.join_group_title));
         user = FirebaseAuth.getInstance().getCurrentUser();
 
         TextView directions = (TextView) findViewById(R.id.chooser_directions);

@@ -37,6 +37,7 @@ public class GroupJoinActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_join);
+        getSupportActionBar().setTitle(getString(R.string.join_group_title));
         user = FirebaseAuth.getInstance().getCurrentUser();
         directions = (TextView) findViewById(R.id.join_directions);
         directions.setText(R.string.join_directions);
