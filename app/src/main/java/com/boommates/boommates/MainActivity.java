@@ -180,7 +180,8 @@ public class MainActivity extends AppCompatActivity {
                                                                 millisUntilFinished = millisUntilFinished % minutesInMilli;
                                                                 long elapsedSeconds = millisUntilFinished / secondsInMilli;
                                                                 String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                timerText.setText(timerString + " until BOOMs are reset");
+                                                                String combinedText = timerString + " " + getString(R.string.timer_reset);
+                                                                timerText.setText(combinedText);
                                                             }
 
                                                             public void onFinish() {
@@ -203,8 +204,9 @@ public class MainActivity extends AppCompatActivity {
                                                                 millisUntilFinished = millisUntilFinished % minutesInMilli;
                                                                 long elapsedSeconds = millisUntilFinished / secondsInMilli;
                                                                 String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                                                String combinedText = timerString + " " + getString(R.string.timer_vulnerable);
                                                                 timerText.setTextSize(16);
-                                                                timerText.setText(timerString + " until you're vulnerable to final BOOMs");
+                                                                timerText.setText(combinedText);
                                                             }
 
                                                             public void onFinish() {
@@ -221,7 +223,8 @@ public class MainActivity extends AppCompatActivity {
                                                                         millisUntilFinished = millisUntilFinished % minutesInMilli;
                                                                         long elapsedSeconds = millisUntilFinished / secondsInMilli;
                                                                         String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                        timerText.setText(timerString + " until BOOMs are reset");
+                                                                        String combinedText = timerString + " " + getString(R.string.timer_reset);
+                                                                        timerText.setText(combinedText);
                                                                     }
 
                                                                     public void onFinish() {
@@ -246,7 +249,8 @@ public class MainActivity extends AppCompatActivity {
                                                                 millisUntilFinished = millisUntilFinished % minutesInMilli;
                                                                 long elapsedSeconds = millisUntilFinished / secondsInMilli;
                                                                 String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                timerText.setText(timerString + " until BOOMs are reset");
+                                                                String combinedText = timerString + " " + getString(R.string.timer_reset);
+                                                                timerText.setText(combinedText);
                                                             }
 
                                                             public void onFinish() {
