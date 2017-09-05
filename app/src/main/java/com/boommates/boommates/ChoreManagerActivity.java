@@ -319,12 +319,12 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
         public ChoreManagerAdapter(ArrayList<String> chores) {
             this.chores = chores;
-            Collections.sort(chores);
+            Collections.sort(this.chores);
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chore_card, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
             this.context = viewGroup.getContext();
             return new ViewHolder(view);
         }
@@ -361,8 +361,8 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
             public ViewHolder(View view) {
                 super(view);
-                tv_chore = view.findViewById(R.id.chore_name);
-                button_boom = view.findViewById(R.id.boom_button);
+                tv_chore = view.findViewById(R.id.card_name);
+                button_boom = view.findViewById(R.id.card_button);
                 button_boom.setText(R.string.remove);
             }
         }

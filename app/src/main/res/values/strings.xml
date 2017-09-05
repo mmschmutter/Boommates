@@ -34,11 +34,10 @@
     <string name="err_msg_group_id">No group associated with that email</string>
 
     <!-- menu strings -->
-    <string name="menu_edit_list">Edit Task List</string>
+    <string name="menu_edit_tasks">Edit Tasks</string>
+    <string name="menu_remove_members">Remove Members</string>
+    <string name="menu_leave_group">Leave Group</string>
     <string name="menu_logout">Log Out</string>
-    <string name="menu_group_settings">Group Settings</string>
-    <string name="prompt_add_chore">Enter name of new task</string>
-    <string name="remove">REMOVE</string>
 
     <!-- X explanation strings -->
     <string name="first_x_explanation">First BOOM\nThis BOOM will disappear if you do not receive another BOOM within 24 hours</string>
@@ -54,4 +53,10 @@
     <string name="no_chore">🎉 Nothing! 🎉</string>
     <string name="timer_reset">until BOOMs reset</string>
     <string name="timer_vulnerable">until you\'re vulnerable to final BOOMs</string>
+    <string name="btn_remove_members">Remove Group Members</string>
+    <string name="btn_change_admin">Change Group Admin</string>
+    <string name="btn_leave_group">Leave Group</string>
+    <string name="prompt_add_chore">Enter name of new task</string>
+    <string name="remove">REMOVE</string>
+    <string name="member_manager_title">Manage Members</string>
 </resources>

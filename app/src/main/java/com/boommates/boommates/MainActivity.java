@@ -60,18 +60,35 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-            setContentView(R.layout.activity_main);
-            topProgressBar = (ProgressBar) findViewById(R.id.progress_main_top);
-            topProgressBar.setVisibility(View.VISIBLE);
-            bottomProgressBar = (ProgressBar) findViewById(R.id.progress_main_bottom);
-            bottomProgressBar.setVisibility(View.VISIBLE);
             boommatesDB = FirebaseDatabase.getInstance().getReference();
-            groupList = FirebaseDatabase.getInstance().getReference("groups");
             userList = FirebaseDatabase.getInstance().getReference("users");
-            chores = new ArrayList<>();
-            rotateChores();
-            initDashboard();
-            initChoreView();
+            groupList = FirebaseDatabase.getInstance().getReference("groups");
+            userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot userGroupSnap) {
+                    if (userGroupSnap.getValue(String.class).equals("none")) {
+                        Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        setContentView(R.layout.activity_main);
+                        topProgressBar = (ProgressBar) findViewById(R.id.progress_main_top);
+                        topProgressBar.setVisibility(View.VISIBLE);
+                        bottomProgressBar = (ProgressBar) findViewById(R.id.progress_main_bottom);
+                        bottomProgressBar.setVisibility(View.VISIBLE);
+                        chores = new ArrayList<>();
+                        rotateChores();
+                        initDashboard();
+                        initChoreView();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG + "Cancelled", databaseError.toString());
+                }
+            });
         }
     }
 
@@ -153,159 +170,161 @@ public class MainActivity extends AppCompatActivity {
                                             boommatesDB.child("currentTime").addValueEventListener(new ValueEventListener() {
                                                 @Override
                                                 public void onDataChange(final DataSnapshot currentTimeSnap) {
-                                                    if (timer != null) {
-                                                        timer.cancel();
-                                                        timer = null;
+                                                    if (lastBoomSnap.exists()) {
+                                                        if (timer != null) {
+                                                            timer.cancel();
+                                                            timer = null;
+                                                        }
+                                                        long remainingTime = 86400000 - (currentTimeSnap.getValue(Long.class) - lastBoomSnap.getValue(Long.class));
+                                                        if (boomNumberSnap.getValue(Integer.class) == 0) {
+                                                            firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            timerText.setText("No BOOMs, keep up the good work");
+                                                        } else if (boomNumberSnap.getValue(Integer.class) == 1) {
+                                                            firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+                                                            secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            timer = new CountDownTimer(remainingTime, 1000) {
+                                                                public void onTick(long millisUntilFinished) {
+                                                                    long secondsInMilli = 1000;
+                                                                    long minutesInMilli = secondsInMilli * 60;
+                                                                    long hoursInMilli = minutesInMilli * 60;
+                                                                    long elapsedHours = millisUntilFinished / hoursInMilli;
+                                                                    millisUntilFinished = millisUntilFinished % hoursInMilli;
+                                                                    long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                                                    millisUntilFinished = millisUntilFinished % minutesInMilli;
+                                                                    long elapsedSeconds = millisUntilFinished / secondsInMilli;
+                                                                    String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                                                    String combinedText = timerString + " " + getString(R.string.timer_reset);
+                                                                    timerText.setText(combinedText);
+                                                                }
+
+                                                                public void onFinish() {
+                                                                    boomNumberSnap.getRef().setValue(0);
+                                                                }
+                                                            }.start();
+                                                        } else if (boomNumberSnap.getValue(Integer.class) == 2) {
+                                                            firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+                                                            secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+                                                            thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            timer = new CountDownTimer(remainingTime, 1000) {
+                                                                public void onTick(long millisUntilFinished) {
+                                                                    long secondsInMilli = 1000;
+                                                                    long minutesInMilli = secondsInMilli * 60;
+                                                                    long hoursInMilli = minutesInMilli * 60;
+                                                                    long elapsedHours = millisUntilFinished / hoursInMilli;
+                                                                    millisUntilFinished = millisUntilFinished % hoursInMilli;
+                                                                    long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                                                    millisUntilFinished = millisUntilFinished % minutesInMilli;
+                                                                    long elapsedSeconds = millisUntilFinished / secondsInMilli;
+                                                                    String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                                                    String combinedText = timerString + " " + getString(R.string.timer_vulnerable);
+                                                                    timerText.setTextSize(16);
+                                                                    timerText.setText(combinedText);
+                                                                }
+
+                                                                public void onFinish() {
+                                                                    timer.cancel();
+                                                                    timer = null;
+                                                                    timer = new CountDownTimer(86400000, 1000) {
+                                                                        public void onTick(long millisUntilFinished) {
+                                                                            long secondsInMilli = 1000;
+                                                                            long minutesInMilli = secondsInMilli * 60;
+                                                                            long hoursInMilli = minutesInMilli * 60;
+                                                                            long elapsedHours = millisUntilFinished / hoursInMilli;
+                                                                            millisUntilFinished = millisUntilFinished % hoursInMilli;
+                                                                            long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                                                            millisUntilFinished = millisUntilFinished % minutesInMilli;
+                                                                            long elapsedSeconds = millisUntilFinished / secondsInMilli;
+                                                                            String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                                                            String combinedText = timerString + " " + getString(R.string.timer_reset);
+                                                                            timerText.setText(combinedText);
+                                                                        }
+
+                                                                        public void onFinish() {
+                                                                            boomNumberSnap.getRef().setValue(0);
+                                                                        }
+                                                                    }.start();
+                                                                }
+                                                            }.start();
+                                                        } else if (boomNumberSnap.getValue(Integer.class) == 3) {
+                                                            firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+                                                            secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+                                                            thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+                                                            fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
+                                                            timer = new CountDownTimer(remainingTime, 1000) {
+                                                                public void onTick(long millisUntilFinished) {
+                                                                    long secondsInMilli = 1000;
+                                                                    long minutesInMilli = secondsInMilli * 60;
+                                                                    long hoursInMilli = minutesInMilli * 60;
+                                                                    long elapsedHours = millisUntilFinished / hoursInMilli;
+                                                                    millisUntilFinished = millisUntilFinished % hoursInMilli;
+                                                                    long elapsedMinutes = millisUntilFinished / minutesInMilli;
+                                                                    millisUntilFinished = millisUntilFinished % minutesInMilli;
+                                                                    long elapsedSeconds = millisUntilFinished / secondsInMilli;
+                                                                    String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
+                                                                    String combinedText = timerString + " " + getString(R.string.timer_reset);
+                                                                    timerText.setText(combinedText);
+                                                                }
+
+                                                                public void onFinish() {
+                                                                    boomNumberSnap.getRef().setValue(0);
+                                                                }
+                                                            }.start();
+                                                        } else if (boomNumberSnap.getValue(Integer.class) == 4) {
+                                                            boomNumberSnap.getRef().setValue(0);
+                                                        }
+                                                        firstX.setOnTouchListener(new View.OnTouchListener() {
+                                                            @Override
+                                                            public boolean onTouch(View v, MotionEvent event) {
+                                                                Toast toast = Toast.makeText(MainActivity.this, getText(R.string.first_x_explanation), Toast.LENGTH_LONG);
+                                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                                text.setGravity(Gravity.CENTER);
+                                                                toast.show();
+                                                                return false;
+                                                            }
+                                                        });
+                                                        secondX.setOnTouchListener(new View.OnTouchListener() {
+                                                            @Override
+                                                            public boolean onTouch(View v, MotionEvent event) {
+                                                                Toast toast = Toast.makeText(MainActivity.this, getText(R.string.second_x_explanation), Toast.LENGTH_LONG);
+                                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                                text.setGravity(Gravity.CENTER);
+                                                                toast.show();
+                                                                return false;
+                                                            }
+                                                        });
+                                                        thirdX.setOnTouchListener(new View.OnTouchListener() {
+                                                            @Override
+                                                            public boolean onTouch(View v, MotionEvent event) {
+                                                                Toast toast = Toast.makeText(MainActivity.this, getText(R.string.third_x_explanation), Toast.LENGTH_LONG);
+                                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                                text.setGravity(Gravity.CENTER);
+                                                                toast.show();
+                                                                return false;
+                                                            }
+                                                        });
+                                                        fourthX.setOnTouchListener(new View.OnTouchListener() {
+                                                            @Override
+                                                            public boolean onTouch(View v, MotionEvent event) {
+                                                                Toast toast = Toast.makeText(MainActivity.this, getText(R.string.fourth_x_explanation), Toast.LENGTH_LONG);
+                                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                                text.setGravity(Gravity.CENTER);
+                                                                toast.show();
+                                                                return false;
+                                                            }
+                                                        });
+                                                        firstX.setVisibility(View.VISIBLE);
+                                                        secondX.setVisibility(View.VISIBLE);
+                                                        thirdX.setVisibility(View.VISIBLE);
+                                                        fourthX.setVisibility(View.VISIBLE);
+                                                        timerText.setVisibility(View.VISIBLE);
+                                                        topProgressBar.setVisibility(View.GONE);
                                                     }
-                                                    long remainingTime = 86400000 - (currentTimeSnap.getValue(Long.class) - lastBoomSnap.getValue(Long.class));
-                                                    if (boomNumberSnap.getValue(Integer.class) == 0) {
-                                                        firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        timerText.setText("No BOOMs, keep up the good work");
-                                                    } else if (boomNumberSnap.getValue(Integer.class) == 1) {
-                                                        firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
-                                                        secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        timer = new CountDownTimer(remainingTime, 1000) {
-                                                            public void onTick(long millisUntilFinished) {
-                                                                long secondsInMilli = 1000;
-                                                                long minutesInMilli = secondsInMilli * 60;
-                                                                long hoursInMilli = minutesInMilli * 60;
-                                                                long elapsedHours = millisUntilFinished / hoursInMilli;
-                                                                millisUntilFinished = millisUntilFinished % hoursInMilli;
-                                                                long elapsedMinutes = millisUntilFinished / minutesInMilli;
-                                                                millisUntilFinished = millisUntilFinished % minutesInMilli;
-                                                                long elapsedSeconds = millisUntilFinished / secondsInMilli;
-                                                                String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                String combinedText = timerString + " " + getString(R.string.timer_reset);
-                                                                timerText.setText(combinedText);
-                                                            }
-
-                                                            public void onFinish() {
-                                                                boomNumberSnap.getRef().setValue(0);
-                                                            }
-                                                        }.start();
-                                                    } else if (boomNumberSnap.getValue(Integer.class) == 2) {
-                                                        firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
-                                                        secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
-                                                        thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        timer = new CountDownTimer(remainingTime, 1000) {
-                                                            public void onTick(long millisUntilFinished) {
-                                                                long secondsInMilli = 1000;
-                                                                long minutesInMilli = secondsInMilli * 60;
-                                                                long hoursInMilli = minutesInMilli * 60;
-                                                                long elapsedHours = millisUntilFinished / hoursInMilli;
-                                                                millisUntilFinished = millisUntilFinished % hoursInMilli;
-                                                                long elapsedMinutes = millisUntilFinished / minutesInMilli;
-                                                                millisUntilFinished = millisUntilFinished % minutesInMilli;
-                                                                long elapsedSeconds = millisUntilFinished / secondsInMilli;
-                                                                String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                String combinedText = timerString + " " + getString(R.string.timer_vulnerable);
-                                                                timerText.setTextSize(16);
-                                                                timerText.setText(combinedText);
-                                                            }
-
-                                                            public void onFinish() {
-                                                                timer.cancel();
-                                                                timer = null;
-                                                                timer = new CountDownTimer(86400000, 1000) {
-                                                                    public void onTick(long millisUntilFinished) {
-                                                                        long secondsInMilli = 1000;
-                                                                        long minutesInMilli = secondsInMilli * 60;
-                                                                        long hoursInMilli = minutesInMilli * 60;
-                                                                        long elapsedHours = millisUntilFinished / hoursInMilli;
-                                                                        millisUntilFinished = millisUntilFinished % hoursInMilli;
-                                                                        long elapsedMinutes = millisUntilFinished / minutesInMilli;
-                                                                        millisUntilFinished = millisUntilFinished % minutesInMilli;
-                                                                        long elapsedSeconds = millisUntilFinished / secondsInMilli;
-                                                                        String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                        String combinedText = timerString + " " + getString(R.string.timer_reset);
-                                                                        timerText.setText(combinedText);
-                                                                    }
-
-                                                                    public void onFinish() {
-                                                                        boomNumberSnap.getRef().setValue(0);
-                                                                    }
-                                                                }.start();
-                                                            }
-                                                        }.start();
-                                                    } else if (boomNumberSnap.getValue(Integer.class) == 3) {
-                                                        firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
-                                                        secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
-                                                        thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
-                                                        fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                        timer = new CountDownTimer(remainingTime, 1000) {
-                                                            public void onTick(long millisUntilFinished) {
-                                                                long secondsInMilli = 1000;
-                                                                long minutesInMilli = secondsInMilli * 60;
-                                                                long hoursInMilli = minutesInMilli * 60;
-                                                                long elapsedHours = millisUntilFinished / hoursInMilli;
-                                                                millisUntilFinished = millisUntilFinished % hoursInMilli;
-                                                                long elapsedMinutes = millisUntilFinished / minutesInMilli;
-                                                                millisUntilFinished = millisUntilFinished % minutesInMilli;
-                                                                long elapsedSeconds = millisUntilFinished / secondsInMilli;
-                                                                String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                                                                String combinedText = timerString + " " + getString(R.string.timer_reset);
-                                                                timerText.setText(combinedText);
-                                                            }
-
-                                                            public void onFinish() {
-                                                                boomNumberSnap.getRef().setValue(0);
-                                                            }
-                                                        }.start();
-                                                    } else if (boomNumberSnap.getValue(Integer.class) == 4) {
-                                                        boomNumberSnap.getRef().setValue(0);
-                                                    }
-                                                    firstX.setOnTouchListener(new View.OnTouchListener() {
-                                                        @Override
-                                                        public boolean onTouch(View v, MotionEvent event) {
-                                                            Toast toast = Toast.makeText(MainActivity.this, getText(R.string.first_x_explanation), Toast.LENGTH_LONG);
-                                                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                                                            text.setGravity(Gravity.CENTER);
-                                                            toast.show();
-                                                            return false;
-                                                        }
-                                                    });
-                                                    secondX.setOnTouchListener(new View.OnTouchListener() {
-                                                        @Override
-                                                        public boolean onTouch(View v, MotionEvent event) {
-                                                            Toast toast = Toast.makeText(MainActivity.this, getText(R.string.second_x_explanation), Toast.LENGTH_LONG);
-                                                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                                                            text.setGravity(Gravity.CENTER);
-                                                            toast.show();
-                                                            return false;
-                                                        }
-                                                    });
-                                                    thirdX.setOnTouchListener(new View.OnTouchListener() {
-                                                        @Override
-                                                        public boolean onTouch(View v, MotionEvent event) {
-                                                            Toast toast = Toast.makeText(MainActivity.this, getText(R.string.third_x_explanation), Toast.LENGTH_LONG);
-                                                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                                                            text.setGravity(Gravity.CENTER);
-                                                            toast.show();
-                                                            return false;
-                                                        }
-                                                    });
-                                                    fourthX.setOnTouchListener(new View.OnTouchListener() {
-                                                        @Override
-                                                        public boolean onTouch(View v, MotionEvent event) {
-                                                            Toast toast = Toast.makeText(MainActivity.this, getText(R.string.fourth_x_explanation), Toast.LENGTH_LONG);
-                                                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                                                            text.setGravity(Gravity.CENTER);
-                                                            toast.show();
-                                                            return false;
-                                                        }
-                                                    });
-                                                    firstX.setVisibility(View.VISIBLE);
-                                                    secondX.setVisibility(View.VISIBLE);
-                                                    thirdX.setVisibility(View.VISIBLE);
-                                                    fourthX.setVisibility(View.VISIBLE);
-                                                    timerText.setVisibility(View.VISIBLE);
-                                                    topProgressBar.setVisibility(View.GONE);
                                                 }
 
                                                 @Override
@@ -517,13 +536,43 @@ public class MainActivity extends AppCompatActivity {
     void setAdminSettings(final Menu menu) {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                groupList.child(dataSnapshot.getValue(String.class)).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(DataSnapshot userGroupSnap) {
+                groupList.child(userGroupSnap.getValue(String.class)).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        if (!snapshot.getValue(String.class).equals(user.getEmail())) {
+                    public void onDataChange(DataSnapshot adminSnap) {
+                        if (adminSnap.exists() && !adminSnap.getValue(String.class).equals(user.getEmail())) {
                             menu.setGroupVisible(R.id.admin_menu_group, false);
                         }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG + "Cancelled", databaseError.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG + "Cancelled", databaseError.toString());
+            }
+        });
+    }
+
+    void leaveGroup() {
+        //TODO: add logic for choosing new admin
+        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot groupSnap) {
+                groupList.child(groupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot choresSnap) {
+                        if (choresSnap.exists() && choresSnap.hasChildren()) {
+                            choresSnap.getChildren().iterator().next().getRef().removeValue();
+                        }
+                        groupList.child(groupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).removeValue();
+                        userList.child(user.getUid()).child("userGroup").setValue("none");
+
                     }
 
                     @Override
@@ -543,15 +592,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_edit_list:
+            case R.id.action_edit_tasks:
                 startActivity(new Intent(MainActivity.this, ChoreManagerActivity.class));
+                break;
+            case R.id.action_remove_members:
+                startActivity(new Intent(MainActivity.this, MemberManagerActivity.class));
+                break;
+            case R.id.action_leave_group:
+                leaveGroup();
+                startActivity(new Intent(MainActivity.this, GroupChooserActivity.class));
                 break;
             case R.id.action_logout:
                 FirebaseAuth.getInstance().signOut();
                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                break;
-            case R.id.action_group_settings:
-                startActivity(new Intent(MainActivity.this, GroupSettingsActivity.class));
                 break;
         }
         return super.onOptionsItemSelected(item);
@@ -563,12 +616,12 @@ public class MainActivity extends AppCompatActivity {
 
         public ChoreBoomAdapter(ArrayList<String> chores) {
             this.chores = chores;
-            Collections.sort(chores);
+            Collections.sort(this.chores);
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.chore_card, viewGroup, false);
+            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
             this.context = viewGroup.getContext();
             return new ViewHolder(view);
         }
@@ -651,8 +704,8 @@ public class MainActivity extends AppCompatActivity {
 
             public ViewHolder(View view) {
                 super(view);
-                tv_chore = view.findViewById(R.id.chore_name);
-                button_boom = view.findViewById(R.id.boom_button);
+                tv_chore = view.findViewById(R.id.card_name);
+                button_boom = view.findViewById(R.id.card_button);
                 button_boom.setText(R.string.boom);
             }
         }

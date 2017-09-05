@@ -31,15 +31,15 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"></activity>
         <activity
+            android:name=".MemberManagerActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"></activity>
+        <activity
             android:name=".GroupChooserActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".GroupJoinActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:screenOrientation="portrait"></activity>
-        <activity
-            android:name=".GroupSettingsActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"></activity>
     </application>
