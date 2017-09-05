@@ -59,4 +59,7 @@
     <string name="prompt_add_chore">Enter name of new task</string>
     <string name="remove">REMOVE</string>
     <string name="member_manager_title">Manage Members</string>
+    <string name="admin_manager_title">Choose New Admin</string>
+    <string name="set_admin">SET ADMIN</string>
+    <string name="left_group">You have successfully left the group</string>
 </resources>

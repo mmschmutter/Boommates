@@ -36,7 +36,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
     private final String TAG = "ChoreManager";
 
-    private DatabaseReference boommatesDB, groupList, userList;
+    private DatabaseReference groupList, userList;
     private RecyclerView choreView;
     private FirebaseUser user;
     private RecyclerView.Adapter adapter;
@@ -52,7 +52,6 @@ public class ChoreManagerActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        boommatesDB = FirebaseDatabase.getInstance().getReference();
         myChores = new ArrayList<>();
         initChoreView();
         updateUI();

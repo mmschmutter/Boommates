@@ -30,7 +30,7 @@ public class MemberManagerActivity extends AppCompatActivity {
 
     private final String TAG = "MemberManager";
 
-    private DatabaseReference boommatesDB, groupList, userList;
+    private DatabaseReference groupList, userList;
     private RecyclerView memberView;
     private FirebaseUser user;
     private RecyclerView.Adapter adapter;
@@ -45,7 +45,6 @@ public class MemberManagerActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        boommatesDB = FirebaseDatabase.getInstance().getReference();
         myMembers = new ArrayList<>();
         initMemberView();
         updateUI();

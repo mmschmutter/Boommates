@@ -25,7 +25,7 @@ public class GroupChooserActivity extends AppCompatActivity {
 
     private Button btnJoinGroup, btnCreateGroup;
     private ProgressBar progressBar;
-    private DatabaseReference boommatesDB, groupList, userList;
+    private DatabaseReference groupList, userList;
 
     private FirebaseUser user;
 
@@ -43,7 +43,6 @@ public class GroupChooserActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_create_apt);
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
-        boommatesDB = FirebaseDatabase.getInstance().getReference();
 
         btnJoinGroup.setOnClickListener(new View.OnClickListener() {
             @Override

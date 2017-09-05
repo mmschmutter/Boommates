@@ -560,19 +560,42 @@ public class MainActivity extends AppCompatActivity {
     }
 
     void leaveGroup() {
-        //TODO: add logic for choosing new admin
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot groupSnap) {
-                groupList.child(groupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+            public void onDataChange(final DataSnapshot userGroupSnap) {
+                groupList.child(userGroupSnap.getValue(String.class)).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot choresSnap) {
-                        if (choresSnap.exists() && choresSnap.hasChildren()) {
-                            choresSnap.getChildren().iterator().next().getRef().removeValue();
-                        }
-                        groupList.child(groupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).removeValue();
-                        userList.child(user.getUid()).child("userGroup").setValue("none");
+                    public void onDataChange(DataSnapshot adminSnap) {
+                        if (adminSnap.exists() && adminSnap.getValue(String.class).equals(user.getEmail())) {
+                            Intent intent = new Intent(MainActivity.this, AdminManagerActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot choresSnap) {
+                                    if (choresSnap.exists() && choresSnap.hasChildren()) {
+                                        choresSnap.getChildren().iterator().next().getRef().removeValue();
+                                    }
+                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).removeValue();
+                                    userList.child(user.getUid()).child("userGroup").setValue("none");
+                                    Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
+                                    TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    text.setGravity(Gravity.CENTER);
+                                    toast.show();
+                                    Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
+                                    finish();
+                                }
 
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG + "Cancelled", databaseError.toString());
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -600,7 +623,6 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.action_leave_group:
                 leaveGroup();
-                startActivity(new Intent(MainActivity.this, GroupChooserActivity.class));
                 break;
             case R.id.action_logout:
                 FirebaseAuth.getInstance().signOut();

@@ -30,7 +30,7 @@ public class GroupJoinActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private EditText aptInputID;
     private TextInputLayout aptInputLayout;
-    private DatabaseReference boommatesDB, groupList, userList;
+    private DatabaseReference groupList, userList;
     private FirebaseUser user;
 
     @Override
@@ -45,7 +45,6 @@ public class GroupJoinActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_join_apt);
         aptInputID = (EditText) findViewById(R.id.input_apt_id);
         btnJoinApt = (Button) findViewById(R.id.btn_join_apt);
-        boommatesDB = FirebaseDatabase.getInstance().getReference();
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
 
