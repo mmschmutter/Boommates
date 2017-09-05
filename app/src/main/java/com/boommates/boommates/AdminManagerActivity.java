@@ -218,4 +218,9 @@ public class AdminManagerActivity extends AppCompatActivity {
         }
 
     }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(AdminManagerActivity.this, MainActivity.class));
+    }
 }

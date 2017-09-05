@@ -58,7 +58,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
-            finish();
         } else {
             boommatesDB = FirebaseDatabase.getInstance().getReference();
             userList = FirebaseDatabase.getInstance().getReference("users");
@@ -70,7 +69,6 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
-                        finish();
                     } else {
                         setContentView(R.layout.activity_main);
                         topProgressBar = (ProgressBar) findViewById(R.id.progress_main_top);
@@ -567,10 +565,31 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(DataSnapshot adminSnap) {
                         if (adminSnap.exists() && adminSnap.getValue(String.class).equals(user.getEmail())) {
-                            Intent intent = new Intent(MainActivity.this, AdminManagerActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                            groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot groupMembersSnap) {
+                                    if (groupMembersSnap.getChildrenCount() == 1) {
+                                        groupList.child(userGroupSnap.getValue(String.class)).removeValue();
+                                        userList.child(user.getUid()).child("userGroup").setValue("none");
+                                        Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
+                                        TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                        text.setGravity(Gravity.CENTER);
+                                        toast.show();
+                                        Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    } else {
+                                        Intent intent = new Intent(MainActivity.this, AdminManagerActivity.class);
+                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                    }
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG + "Cancelled", databaseError.toString());
+                                }
+                            });
                         } else {
                             groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
@@ -587,7 +606,6 @@ public class MainActivity extends AppCompatActivity {
                                     Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
-                                    finish();
                                 }
 
                                 @Override
