@@ -168,11 +168,11 @@ public class MainActivity extends AppCompatActivity {
                                     groupChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(final DataSnapshot lastBoomSnap) {
-                                            boommatesDB.child("currentTime").setValue(ServerValue.TIMESTAMP);
-                                            boommatesDB.child("currentTime").addValueEventListener(new ValueEventListener() {
-                                                @Override
-                                                public void onDataChange(final DataSnapshot currentTimeSnap) {
-                                                    if (lastBoomSnap.exists()) {
+                                            if (lastBoomSnap.exists()) {
+                                                boommatesDB.child("currentTime").setValue(ServerValue.TIMESTAMP);
+                                                boommatesDB.child("currentTime").addValueEventListener(new ValueEventListener() {
+                                                    @Override
+                                                    public void onDataChange(final DataSnapshot currentTimeSnap) {
                                                         if (timer != null) {
                                                             timer.cancel();
                                                             timer = null;
@@ -327,13 +327,13 @@ public class MainActivity extends AppCompatActivity {
                                                         timerText.setVisibility(View.VISIBLE);
                                                         topProgressBar.setVisibility(View.GONE);
                                                     }
-                                                }
 
-                                                @Override
-                                                public void onCancelled(DatabaseError databaseError) {
-                                                    Log.d(TAG + "Cancelled", databaseError.toString());
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onCancelled(DatabaseError databaseError) {
+                                                        Log.d(TAG + "Cancelled", databaseError.toString());
+                                                    }
+                                                });
+                                            }
                                         }
 
                                         @Override
