@@ -7,7 +7,7 @@
         jumboMode="true"
         optimize="true"
         revision="26.0.0"
-        sha1="dd6a80668d0e93ee3a92d34dc07d471c39b1c344">
+        sha1="ad83195126bcf3ca95cabfa626a9e9e75a436ebd">
         <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_02aa717ea3bcf083baaad6b706afe84984fe3667/classes.dex" />
     </item>
     <item
@@ -18,6 +18,15 @@
         revision="26.0.0"
         sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
         <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_cad0b8cd6247aecb3764623bcc0fdd5f56d25bde/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/03286e24a3b6a46948ef7d902433437fd15ae7d4/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.0"
+        sha1="f260cdc1a267b17b911022919f19d568e6624229">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_424eb080cf9db4b7bc33b7a2ef4940be05c49127.jar" />
     </item>
 
 </items>

@@ -49,6 +49,7 @@ public class GroupChooserActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(GroupChooserActivity.this, GroupJoinActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
 

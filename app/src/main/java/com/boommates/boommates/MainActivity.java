@@ -31,6 +31,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,10 +59,12 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            finish();
         } else {
             boommatesDB = FirebaseDatabase.getInstance().getReference();
             userList = FirebaseDatabase.getInstance().getReference("users");
             groupList = FirebaseDatabase.getInstance().getReference("groups");
+            userList.child(user.getUid()).child("userToken").setValue(FirebaseInstanceId.getInstance().getToken());
             userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot userGroupSnap) {
@@ -69,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
+                        finish();
                     } else {
                         setContentView(R.layout.activity_main);
                         topProgressBar = (ProgressBar) findViewById(R.id.progress_main_top);
@@ -161,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
                             groupChoreSnap.getChildren().iterator().next().getRef().child("boomNumber").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(final DataSnapshot boomNumberSnap) {
+                                    initDashboard();
                                     groupChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(final DataSnapshot lastBoomSnap) {
@@ -518,8 +523,9 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         Intent intent = new Intent(Intent.ACTION_MAIN);
         intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+        finish();
     }
 
     @Override
@@ -578,10 +584,9 @@ public class MainActivity extends AppCompatActivity {
                                         Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
+                                        finish();
                                     } else {
-                                        Intent intent = new Intent(MainActivity.this, AdminManagerActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(intent);
+                                        startActivity(new Intent(MainActivity.this, AdminManagerActivity.class));
                                     }
                                 }
 
@@ -606,6 +611,7 @@ public class MainActivity extends AppCompatActivity {
                                     Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
                                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
+                                    finish();
                                 }
 
                                 @Override

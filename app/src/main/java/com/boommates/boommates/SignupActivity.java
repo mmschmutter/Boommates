@@ -77,6 +77,7 @@ public class SignupActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
                 startActivity(intent);
+                finish();
             }
         });
     }
@@ -126,10 +127,12 @@ public class SignupActivity extends AppCompatActivity {
                             TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
                             text.setGravity(Gravity.CENTER);
                             toast.show();
-                            Map<String, String> emailValue = new HashMap<>();
-                            emailValue.put("userEmail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                            Map<String, String> userValues = new HashMap<>();
+                            userValues.put("userEmail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
+                            userValues.put("userGroup", "none");
+                            userValues.put("userToken", "none");
                             Map<String, Object> childUpdates = new HashMap<>();
-                            childUpdates.put("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid(), emailValue);
+                            childUpdates.put("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid(), userValues);
                             boommatesDB.updateChildren(childUpdates);
                             startActivity(new Intent(SignupActivity.this, GroupChooserActivity.class));
                             finish();
@@ -203,5 +206,6 @@ public class SignupActivity extends AppCompatActivity {
         intent.addCategory(Intent.CATEGORY_HOME);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+        finish();
     }
 }
