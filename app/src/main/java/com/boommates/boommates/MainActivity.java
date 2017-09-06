@@ -225,7 +225,6 @@ public class MainActivity extends AppCompatActivity {
                                                                     long elapsedSeconds = millisUntilFinished / secondsInMilli;
                                                                     String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
                                                                     String combinedText = timerString + " " + getString(R.string.timer_vulnerable);
-                                                                    timerText.setTextSize(16);
                                                                     timerText.setText(combinedText);
                                                                 }
 

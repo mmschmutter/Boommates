@@ -52,7 +52,7 @@
     <string name="err_num_chores">Cannot add more tasks than number of group members</string>
     <string name="no_chore">🎉 Nothing! 🎉</string>
     <string name="timer_reset">until BOOMs reset</string>
-    <string name="timer_vulnerable">until you\'re vulnerable to final BOOMs</string>
+    <string name="timer_vulnerable">left in grace period</string>
     <string name="btn_remove_members">Remove Group Members</string>
     <string name="btn_change_admin">Change Group Admin</string>
     <string name="btn_leave_group">Leave Group</string>
