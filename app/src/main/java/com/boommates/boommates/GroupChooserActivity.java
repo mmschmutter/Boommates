@@ -47,9 +47,7 @@ public class GroupChooserActivity extends AppCompatActivity {
         btnJoinGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(GroupChooserActivity.this, GroupJoinActivity.class);
-                startActivity(intent);
-                finish();
+                startActivity(new Intent(GroupChooserActivity.this, GroupJoinActivity.class));
             }
         });
 
@@ -72,7 +70,10 @@ public class GroupChooserActivity extends AppCompatActivity {
                         TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
                         text.setGravity(Gravity.CENTER);
                         toast.show();
-                        startActivity(new Intent(GroupChooserActivity.this, MainActivity.class));
+                        Intent intent = new Intent(GroupChooserActivity.this, MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
                     }
 
                     @Override

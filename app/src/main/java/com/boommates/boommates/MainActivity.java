@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot userGroupSnap) {
                     if (userGroupSnap.getValue(String.class).equals("none")) {
                         Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {
@@ -165,7 +165,6 @@ public class MainActivity extends AppCompatActivity {
                             groupChoreSnap.getChildren().iterator().next().getRef().child("boomNumber").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(final DataSnapshot boomNumberSnap) {
-                                    initDashboard();
                                     groupChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addValueEventListener(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(final DataSnapshot lastBoomSnap) {
@@ -184,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                                                             secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
                                                             thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
                                                             fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
-                                                            timerText.setText("No BOOMs, keep up the good work");
+                                                            timerText.setText(getText(R.string.no_booms));
                                                         } else if (boomNumberSnap.getValue(Integer.class) == 1) {
                                                             firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
                                                             secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -520,15 +519,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
-    }
-
-    @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         if (user != null) {
             getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -582,7 +572,7 @@ public class MainActivity extends AppCompatActivity {
                                         text.setGravity(Gravity.CENTER);
                                         toast.show();
                                         Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         finish();
                                     } else {
@@ -609,7 +599,7 @@ public class MainActivity extends AppCompatActivity {
                                     text.setGravity(Gravity.CENTER);
                                     toast.show();
                                     Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -649,8 +639,12 @@ public class MainActivity extends AppCompatActivity {
                 leaveGroup();
                 break;
             case R.id.action_logout:
+                userList.child(user.getUid()).child("userToken").setValue("none");
                 FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
                 break;
         }
         return super.onOptionsItemSelected(item);

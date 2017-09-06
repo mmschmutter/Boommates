@@ -76,6 +76,7 @@ public class SignupActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(SignupActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             }
@@ -134,7 +135,9 @@ public class SignupActivity extends AppCompatActivity {
                             Map<String, Object> childUpdates = new HashMap<>();
                             childUpdates.put("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid(), userValues);
                             boommatesDB.updateChildren(childUpdates);
-                            startActivity(new Intent(SignupActivity.this, GroupChooserActivity.class));
+                            Intent intent = new Intent(SignupActivity.this, GroupChooserActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
                             finish();
                         }
                     }
@@ -198,14 +201,5 @@ public class SignupActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.GONE);
-    }
-
-    @Override
-    public void onBackPressed() {
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
-        finish();
     }
 }

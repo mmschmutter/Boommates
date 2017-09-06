@@ -78,7 +78,10 @@ public class GroupJoinActivity extends AppCompatActivity {
                     String groupID = dataSnapshot.getChildren().iterator().next().getKey();
                     groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userEmail").setValue(user.getEmail());
                     userList.child(user.getUid()).child("userGroup").setValue(groupID);
-                    startActivity(new Intent(GroupJoinActivity.this, MainActivity.class));
+                    Intent intent = new Intent(GroupJoinActivity.this, MainActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    finish();
                 } else {
                     progressBar.setVisibility(View.GONE);
                     aptInputLayout.setError(getString(R.string.err_msg_group_id));

@@ -179,7 +179,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                                     text.setGravity(Gravity.CENTER);
                                     toast.show();
                                     Intent intent = new Intent(AdminManagerActivity.this, GroupChooserActivity.class);
-                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(intent);
                                     finish();
                                 }
@@ -217,10 +217,5 @@ public class AdminManagerActivity extends AppCompatActivity {
             }
         }
 
-    }
-
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(AdminManagerActivity.this, MainActivity.class));
     }
 }
