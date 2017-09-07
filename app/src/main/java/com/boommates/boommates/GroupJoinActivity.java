@@ -21,6 +21,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class GroupJoinActivity extends AppCompatActivity {
 
     private static final String TAG = "GJoinActivity";
@@ -73,11 +76,28 @@ public class GroupJoinActivity extends AppCompatActivity {
 
         groupList.orderByChild("groupAdmin").equalTo(aptEmail).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChildren()) {
-                    String groupID = dataSnapshot.getChildren().iterator().next().getKey();
+            public void onDataChange(DataSnapshot groupSnap) {
+                if (groupSnap.hasChildren()) {
+                    String groupID = groupSnap.getChildren().iterator().next().getKey();
                     groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userEmail").setValue(user.getEmail());
                     userList.child(user.getUid()).child("userGroup").setValue(groupID);
+                    groupList.child(groupID).child("groupChores").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot groupChoresSnap) {
+                            for (DataSnapshot chore : groupChoresSnap.getChildren()) {
+                                Map<String, Integer> userValues = new HashMap<>();
+                                userValues.put("boomTime", 0);
+                                Map<String, Object> childUpdates = new HashMap<>();
+                                childUpdates.put("/" + user.getUid(), userValues);
+                                chore.getRef().updateChildren(childUpdates);
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d(TAG + "Cancelled", databaseError.toString());
+                        }
+                    });
                     Intent intent = new Intent(GroupJoinActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
