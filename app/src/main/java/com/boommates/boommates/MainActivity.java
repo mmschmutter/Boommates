@@ -61,7 +61,11 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
-
+            setContentView(R.layout.activity_main);
+            topProgressBar = (ProgressBar) findViewById(R.id.progress_main_top);
+            topProgressBar.setVisibility(View.VISIBLE);
+            bottomProgressBar = (ProgressBar) findViewById(R.id.progress_main_bottom);
+            bottomProgressBar.setVisibility(View.VISIBLE);
             userList = FirebaseDatabase.getInstance().getReference("users");
             userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -72,7 +76,6 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
-
                         boommatesDB = FirebaseDatabase.getInstance().getReference();
                         groupList = FirebaseDatabase.getInstance().getReference("groups");
                         userList.child(user.getUid()).child("userToken").setValue(FirebaseInstanceId.getInstance().getToken());
