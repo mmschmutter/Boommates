@@ -547,19 +547,21 @@ public class MainActivity extends AppCompatActivity {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot adminSnap) {
-                        if (adminSnap.exists() && !adminSnap.getValue(String.class).equals(user.getEmail())) {
-                            menu.setGroupVisible(R.id.admin_menu_group, false);
+                if (!userGroupSnap.getValue(String.class).equals("none")) {
+                    groupList.child(userGroupSnap.getValue(String.class)).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot adminSnap) {
+                            if (adminSnap.exists() && !adminSnap.getValue(String.class).equals(user.getEmail())) {
+                                menu.setGroupVisible(R.id.admin_menu_group, false);
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
+                        @Override
+                        public void onCancelled(DatabaseError databaseError) {
+                            Log.d(TAG + "Cancelled", databaseError.toString());
+                        }
+                    });
+                }
             }
 
             @Override
