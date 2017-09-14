@@ -165,12 +165,12 @@ public class MainActivity extends AppCompatActivity {
                             groupChoreSnap.getChildren().iterator().next().getRef().child("boomNumber").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(final DataSnapshot boomNumberSnap) {
-                                    groupChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addValueEventListener(new ValueEventListener() {
+                                    groupChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(final DataSnapshot lastBoomSnap) {
                                             if (lastBoomSnap.exists()) {
                                                 boommatesDB.child("currentTime").setValue(ServerValue.TIMESTAMP);
-                                                boommatesDB.child("currentTime").addValueEventListener(new ValueEventListener() {
+                                                boommatesDB.child("currentTime").addListenerForSingleValueEvent(new ValueEventListener() {
                                                     @Override
                                                     public void onDataChange(final DataSnapshot currentTimeSnap) {
                                                         if (timer != null) {
@@ -380,12 +380,13 @@ public class MainActivity extends AppCompatActivity {
         updateUI();
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot userGroupSnap) {
-                DatabaseReference choreList = groupList.child(userGroupSnap.getValue(String.class)).child("groupChores");
+            public void onDataChange(final DataSnapshot userGroupSnap) {
+                final DatabaseReference choreList = groupList.child(userGroupSnap.getValue(String.class)).child("groupChores");
+
                 choreList.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.hasChildren()) {
+                    public void onDataChange(DataSnapshot groupChoresSnap) {
+                        if (!groupChoresSnap.hasChildren()) {
                             bottomProgressBar.setVisibility(View.GONE);
                         }
                     }
@@ -467,7 +468,22 @@ public class MainActivity extends AppCompatActivity {
                                                             @Override
                                                             public void onDataChange(DataSnapshot choresSnap) {
                                                                 int memberNum = 0;
-                                                                for (DataSnapshot chore : choresSnap.getChildren()) {
+                                                                for (final DataSnapshot chore : choresSnap.getChildren()) {
+                                                                    chore.getRef().child("boomNumber").setValue(0);
+                                                                    chore.getRef().child("lastBoom").setValue(0);
+                                                                    groupList.child(group.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                                                                        @Override
+                                                                        public void onDataChange(DataSnapshot groupMemberSnap) {
+                                                                            for (DataSnapshot member : groupMemberSnap.getChildren()) {
+                                                                                chore.getRef().child(member.getKey()).child("boomTime").setValue(0);
+                                                                            }
+                                                                        }
+
+                                                                        @Override
+                                                                        public void onCancelled(DatabaseError databaseError) {
+                                                                            Log.d(TAG + "Cancelled", databaseError.toString());
+                                                                        }
+                                                                    });
                                                                     chore.getRef().child("choreUser").setValue(groupMembers.get(memberNum));
                                                                     memberNum++;
                                                                 }

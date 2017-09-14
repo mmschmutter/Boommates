@@ -30,13 +30,15 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ChoreManagerActivity extends AppCompatActivity {
 
     private final String TAG = "ChoreManager";
 
-    private DatabaseReference groupList, userList;
+    private DatabaseReference boommatesDB, groupList, userList;
     private RecyclerView choreView;
     private FirebaseUser user;
     private RecyclerView.Adapter adapter;
@@ -63,6 +65,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
                 createNewListItem();
             }
         });
+        boommatesDB = FirebaseDatabase.getInstance().getReference();
         userList = FirebaseDatabase.getInstance().getReference("users");
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -167,7 +170,6 @@ public class ChoreManagerActivity extends AppCompatActivity {
                                                         toast.show();
                                                     } else {
                                                         addChore(choreName);
-                                                        assignChores();
                                                     }
                                                 }
 
@@ -225,76 +227,38 @@ public class ChoreManagerActivity extends AppCompatActivity {
         updateUI();
     }
 
-    public void addChore(final String choreName) {
-        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot dataSnapshot) {
-                groupList.child(dataSnapshot.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot snapshot) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            groupList.child(dataSnapshot.getValue(String.class)).child("groupChores").child(choreName).child("boomNumber").setValue(0);
-                            groupList.child(dataSnapshot.getValue(String.class)).child("groupChores").child(choreName).child("lastBoom").setValue(0);
-                            groupList.child(dataSnapshot.getValue(String.class)).child("groupChores").child(choreName).child(user.getKey()).child("boomTime").setValue(0);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG + "Cancelled", databaseError.toString());
-            }
-        });
-    }
-
-    private void assignChores() {
+    private void addChore(final String choreName) {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").addValueEventListener(new ValueEventListener() {
+                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(final DataSnapshot choresSnap) {
-                        for (DataSnapshot chore : choresSnap.getChildren()) {
-                            if (!chore.hasChild("choreUser")) {
-                                groupList.child(userGroupSnap.getValue(String.class)).child("groupRotation").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot rotationSnap) {
-                                        final int rotation = rotationSnap.getValue(Integer.class);
-                                        groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(DataSnapshot membersSnap) {
-                                                final ArrayList<String> groupMembers = new ArrayList<>();
-                                                for (DataSnapshot member : membersSnap.getChildren()) {
-                                                    groupMembers.add(member.getKey());
-                                                }
-                                                Collections.rotate(groupMembers, rotation);
-                                                int memberNum = 0;
-                                                for (DataSnapshot chore : choresSnap.getChildren()) {
-                                                    chore.getRef().child("choreUser").setValue(groupMembers.get(memberNum));
-                                                    memberNum++;
-                                                }
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                                Log.d(TAG + "Cancelled", databaseError.toString());
-                                            }
-                                        });
+                    public void onDataChange(final DataSnapshot groupMembersSnap) {
+                        for (final DataSnapshot member : groupMembersSnap.getChildren()) {
+                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(member.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot choreSnap) {
+                                    if (!choreSnap.exists()) {
+                                        Map<String, Object> choreValues = new HashMap<>();
+                                        for (DataSnapshot member : groupMembersSnap.getChildren()) {
+                                            Map<String, Integer> memberValues = new HashMap<>();
+                                            memberValues.put("boomTime", 0);
+                                            choreValues.put(member.getKey(), memberValues);
+                                        }
+                                        choreValues.put("boomNumber", 0);
+                                        choreValues.put("lastBoom", 0);
+                                        choreValues.put("choreUser", member.getKey());
+                                        Map<String, Object> childUpdates = new HashMap<>();
+                                        childUpdates.put("/groups/" + userGroupSnap.getValue(String.class) + "/groupChores/" + choreName, choreValues);
+                                        boommatesDB.updateChildren(childUpdates);
                                     }
+                                }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Log.d(TAG + "Cancelled", databaseError.toString());
-                                    }
-                                });
-                                return;
-                            }
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG + "Cancelled", databaseError.toString());
+                                }
+                            });
                         }
                     }
 
