@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView choreView;
     private FirebaseUser user;
     private ArrayList<String> chores;
-    private TextView header, yourChore, timerText;
+    private TextView header, yourChoreView, timerText;
     private ImageView firstX, secondX, thirdX, fourthX;
     private CountDownTimer timer;
     private RecyclerView.LayoutManager layoutManager;
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
     private void initDashboard() {
         header = (TextView) findViewById(R.id.header);
         header.setText(R.string.header);
-        yourChore = (TextView) findViewById(R.id.your_chore_banner);
+        yourChoreView = (TextView) findViewById(R.id.your_chore_banner);
         firstX = (ImageView) findViewById(R.id.first_x);
         secondX = (ImageView) findViewById(R.id.second_x);
         thirdX = (ImageView) findViewById(R.id.third_x);
@@ -159,13 +159,14 @@ public class MainActivity extends AppCompatActivity {
             public void onDataChange(final DataSnapshot userGroupSnap) {
                 groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
                     @Override
-                    public void onDataChange(final DataSnapshot groupChoreSnap) {
-                        if (groupChoreSnap.hasChildren()) {
-                            yourChore.setText(groupChoreSnap.getChildren().iterator().next().getKey());
-                            groupChoreSnap.getChildren().iterator().next().getRef().child("boomNumber").addValueEventListener(new ValueEventListener() {
+                    public void onDataChange(final DataSnapshot userChoreSnap) {
+                        if (userChoreSnap.hasChildren()) {
+                            String yourChore = userChoreSnap.getChildren().iterator().next().getKey();
+                            yourChoreView.setText(yourChore);
+                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(yourChore).child("boomNumber").addValueEventListener(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(final DataSnapshot boomNumberSnap) {
-                                    groupChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    userChoreSnap.getChildren().iterator().next().getRef().child("lastBoom").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(final DataSnapshot lastBoomSnap) {
                                             if (lastBoomSnap.exists()) {
@@ -348,7 +349,7 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            yourChore.setText(getString(R.string.no_chore));
+                            yourChoreView.setText(getString(R.string.no_chore));
                             firstX.setVisibility(View.GONE);
                             secondX.setVisibility(View.GONE);
                             thirdX.setVisibility(View.GONE);
