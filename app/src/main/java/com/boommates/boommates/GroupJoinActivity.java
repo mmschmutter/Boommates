@@ -63,7 +63,7 @@ public class GroupJoinActivity extends AppCompatActivity {
         aptInputID.setError(null);
         aptInputLayout.setError(null);
 
-        String aptEmail = aptInputID.getText().toString().trim();
+        String aptEmail = aptInputID.getText().toString().trim().toLowerCase();
 
         if (!checkEmail()) {
             return;
@@ -80,6 +80,7 @@ public class GroupJoinActivity extends AppCompatActivity {
                 if (groupSnap.hasChildren()) {
                     String groupID = groupSnap.getChildren().iterator().next().getKey();
                     groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userEmail").setValue(user.getEmail());
+                    groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userChore").setValue("none");
                     userList.child(user.getUid()).child("userGroup").setValue(groupID);
                     groupList.child(groupID).child("groupChores").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override

@@ -89,7 +89,7 @@ public class SignupActivity extends AppCompatActivity {
         signupInputLayoutPassword.setError(null);
         signupInputLayoutConfirmPassword.setError(null);
 
-        String email = signupInputEmail.getText().toString().trim();
+        String email = signupInputEmail.getText().toString().trim().toLowerCase();
         String password = signupInputPassword.getText().toString().trim();
 
         if (!checkEmail()) {

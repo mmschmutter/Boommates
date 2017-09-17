@@ -34,7 +34,7 @@ public class MemberManagerActivity extends AppCompatActivity {
     private RecyclerView memberView;
     private FirebaseUser user;
     private RecyclerView.Adapter adapter;
-    private ArrayList<String> myMembers;
+    private ArrayList<String> members;
     private ProgressBar progressBar;
 
     @Override
@@ -45,7 +45,7 @@ public class MemberManagerActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        myMembers = new ArrayList<>();
+        members = new ArrayList<>();
         initMemberView();
         updateUI();
         userList = FirebaseDatabase.getInstance().getReference("users");
@@ -72,7 +72,11 @@ public class MemberManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot memberSnap, String s) {
                         Log.d(TAG + "Added", memberSnap.toString());
-                        fetchData(memberSnap);
+                        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
+                        if (!memberEmail.equals(user.getEmail())) {
+                            members.add(memberEmail);
+                        }
+                        updateUI();
                         progressBar.setVisibility(View.GONE);
                     }
 
@@ -84,7 +88,13 @@ public class MemberManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(DataSnapshot memberSnap) {
                         Log.d(TAG + "Removed", memberSnap.toString());
-                        removeData(memberSnap);
+                        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
+                        for (String member : members) {
+                            if (member.equals(memberEmail)) {
+                                members.remove(member);
+                            }
+                        }
+                        updateUI();
                     }
 
                     @Override
@@ -106,26 +116,8 @@ public class MemberManagerActivity extends AppCompatActivity {
         });
     }
 
-    private void fetchData(DataSnapshot memberSnap) {
-        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
-        if (!memberEmail.equals(user.getEmail())) {
-            myMembers.add(memberEmail);
-        }
-        updateUI();
-    }
-
-    private void removeData(DataSnapshot memberSnap) {
-        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
-        for (int i = 0; i < myMembers.size(); i++) {
-            if (myMembers.get(i).equals(memberEmail)) {
-                myMembers.remove(i);
-            }
-        }
-        updateUI();
-    }
-
     private void updateUI() {
-        adapter = new MemberManagerAdapter(myMembers);
+        adapter = new MemberManagerAdapter(members);
         memberView.setAdapter(adapter);
     }
 

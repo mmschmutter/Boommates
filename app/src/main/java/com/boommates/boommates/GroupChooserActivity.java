@@ -65,6 +65,7 @@ public class GroupChooserActivity extends AppCompatActivity {
                         groupList.child(groupID).child("groupAdmin").setValue(user.getEmail());
                         groupList.child(groupID).child("groupRotation").setValue(0);
                         groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userEmail").setValue(user.getEmail());
+                        groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userChore").setValue("none");
                         userList.child(user.getUid()).child("userGroup").setValue(groupID);
                         Toast toast = Toast.makeText(GroupChooserActivity.this, getString(R.string.created_group), Toast.LENGTH_LONG);
                         TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
