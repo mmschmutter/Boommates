@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).child("userChore").addValueEventListener(new ValueEventListener() {
+                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).child("userChore").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot userChoreSnap) {
                         String yourChoreName = userChoreSnap.getValue(String.class);
@@ -588,7 +588,10 @@ public class MainActivity extends AppCompatActivity {
                                         startActivity(intent);
                                         finish();
                                     } else {
-                                        startActivity(new Intent(MainActivity.this, AdminManagerActivity.class));
+                                        Intent intent = new Intent(MainActivity.this, AdminManagerActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
                                     }
                                 }
 

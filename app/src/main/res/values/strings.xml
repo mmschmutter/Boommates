@@ -62,5 +62,6 @@
     <string name="admin_manager_title">Choose New Admin</string>
     <string name="set_admin">SET ADMIN</string>
     <string name="left_group">You have successfully left the group</string>
-    <string name="no_booms">No BOOMs, keep up the good work</string>
+    <string name="no_booms">No BOOMs, keep it up!</string>
+    <string name="edit_tasks_warning">WARNING\nAdding or removing tasks will also reset BOOMs for all existing tasks</string>
 </resources>
