@@ -57,9 +57,9 @@ public class GroupChooserActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.VISIBLE);
                 groupList.orderByChild("groupAdmin").equalTo(user.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (dataSnapshot.hasChildren()) {
-                            dataSnapshot.getChildren().iterator().next().getRef().removeValue();
+                    public void onDataChange(DataSnapshot groupAdminsSnap) {
+                        if (groupAdminsSnap.hasChildren()) {
+                            groupAdminsSnap.getChildren().iterator().next().getRef().removeValue();
                         }
                         String groupID = groupList.push().getKey();
                         groupList.child(groupID).child("groupAdmin").setValue(user.getEmail());

@@ -391,17 +391,13 @@ public class MainActivity extends AppCompatActivity {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addValueEventListener(new ValueEventListener() {
+                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).child("userChore").addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot userChoreSnap) {
-                        if (userChoreSnap.hasChildren()) {
-                            String myChore = userChoreSnap.getChildren().iterator().next().getKey();
-                            ArrayList<String> cleanedChores = new ArrayList<>();
-                            for (String chore : chores) {
-                                if (!chore.equals(myChore)) {
-                                    cleanedChores.add(chore);
-                                }
-                            }
+                        String myChore = userChoreSnap.getValue(String.class);
+                        if (myChore != null && !myChore.equals("none")) {
+                            ArrayList<String> cleanedChores = new ArrayList<>(chores);
+                            cleanedChores.remove(myChore);
                             adapter = new ChoreBoomAdapter(cleanedChores);
                         } else {
                             adapter = new ChoreBoomAdapter(chores);
@@ -594,11 +590,11 @@ public class MainActivity extends AppCompatActivity {
                                 }
                             });
                         } else {
-                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).child("userChore").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot choresSnap) {
-                                    if (choresSnap.exists() && choresSnap.hasChildren()) {
-                                        choresSnap.getChildren().iterator().next().getRef().removeValue();
+                                public void onDataChange(DataSnapshot userChoreSnap) {
+                                    if (!userChoreSnap.getValue(String.class).equals("none")) {
+                                        groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(userChoreSnap.getKey()).removeValue();
                                     }
                                     groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).removeValue();
                                     userList.child(user.getUid()).child("userGroup").setValue("none");

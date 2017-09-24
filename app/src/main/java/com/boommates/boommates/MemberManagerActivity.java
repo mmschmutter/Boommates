@@ -153,15 +153,15 @@ public class MemberManagerActivity extends AppCompatActivity {
                 public void onClick(View view) {
                     userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(final DataSnapshot groupSnap) {
-                            groupList.child(groupSnap.getValue(String.class)).child("groupMembers").orderByChild("userEmail").equalTo(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                        public void onDataChange(final DataSnapshot userGroupSnap) {
+                            groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").orderByChild("userEmail").equalTo(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot membersSnap) {
-                                    final DataSnapshot firstUser = membersSnap.getChildren().iterator().next();
-                                    groupList.child(groupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(firstUser.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                public void onDataChange(DataSnapshot groupMembersSnap) {
+                                    final DataSnapshot firstUser = groupMembersSnap.getChildren().iterator().next();
+                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(firstUser.getKey()).child("userChore").addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
-                                        public void onDataChange(DataSnapshot choresSnap) {
-                                            choresSnap.getChildren().iterator().next().getRef().removeValue();
+                                        public void onDataChange(DataSnapshot userChoreSnap) {
+                                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(userChoreSnap.getValue(String.class)).getRef().removeValue();
                                             firstUser.getRef().removeValue();
                                         }
 
