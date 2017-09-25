@@ -430,7 +430,8 @@ public class MainActivity extends AppCompatActivity {
                     public void onDataChange(final DataSnapshot lastShiftSnap) {
                         long lastShift = lastShiftSnap.getValue(Long.class);
                         if ((currentTime - lastShift) >= 604800000) {
-                            boommatesDB.child("lastShift").setValue(lastShift += 604800000);
+                            lastShift += 604800000;
+                            boommatesDB.child("lastShift").setValue(lastShift);
                             groupList.addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot groupsSnap) {
@@ -450,9 +451,9 @@ public class MainActivity extends AppCompatActivity {
                                                         Collections.rotate(groupMembers, rotation);
                                                         group.getRef().child("groupChores").addListenerForSingleValueEvent(new ValueEventListener() {
                                                             @Override
-                                                            public void onDataChange(DataSnapshot choresSnap) {
+                                                            public void onDataChange(DataSnapshot groupChoresSnap) {
                                                                 int memberNum = 0;
-                                                                for (final DataSnapshot chore : choresSnap.getChildren()) {
+                                                                for (final DataSnapshot chore : groupChoresSnap.getChildren()) {
                                                                     chore.getRef().child("boomNumber").setValue(0);
                                                                     chore.getRef().child("lastBoom").setValue(0);
                                                                     groupList.child(group.getKey()).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
@@ -469,6 +470,7 @@ public class MainActivity extends AppCompatActivity {
                                                                         }
                                                                     });
                                                                     chore.getRef().child("choreUser").setValue(groupMembers.get(memberNum));
+                                                                    group.getRef().child("groupMembers").child(groupMembers.get(memberNum)).child("userChore").setValue(chore.getKey());
                                                                     memberNum++;
                                                                 }
                                                             }
@@ -554,6 +556,30 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_tasks:
+                startActivity(new Intent(MainActivity.this, ChoreManagerActivity.class));
+                break;
+            case R.id.action_remove_members:
+                startActivity(new Intent(MainActivity.this, MemberManagerActivity.class));
+                break;
+            case R.id.action_leave_group:
+                leaveGroup();
+                break;
+            case R.id.action_logout:
+                userList.child(user.getUid()).child("userToken").setValue("none");
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     void leaveGroup() {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -628,30 +654,6 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG + "Cancelled", databaseError.toString());
             }
         });
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_edit_tasks:
-                startActivity(new Intent(MainActivity.this, ChoreManagerActivity.class));
-                break;
-            case R.id.action_remove_members:
-                startActivity(new Intent(MainActivity.this, MemberManagerActivity.class));
-                break;
-            case R.id.action_leave_group:
-                leaveGroup();
-                break;
-            case R.id.action_logout:
-                userList.child(user.getUid()).child("userToken").setValue("none");
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-                break;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     class ChoreBoomAdapter extends RecyclerView.Adapter<ChoreBoomAdapter.ViewHolder> {
