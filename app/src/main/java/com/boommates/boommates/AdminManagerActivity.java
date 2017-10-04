@@ -136,7 +136,7 @@ public class AdminManagerActivity extends AppCompatActivity {
         private ArrayList<String> members;
         private Context context;
 
-        public MemberManagerAdapter(ArrayList<String> members) {
+        MemberManagerAdapter(ArrayList<String> members) {
             this.members = members;
             Collections.sort(this.members);
         }
@@ -197,11 +197,11 @@ public class AdminManagerActivity extends AppCompatActivity {
             return members.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             private TextView tv_email;
             private Button button_set_admin;
 
-            public ViewHolder(View view) {
+            ViewHolder(View view) {
                 super(view);
                 tv_email = view.findViewById(R.id.card_name);
                 button_set_admin = view.findViewById(R.id.card_button);

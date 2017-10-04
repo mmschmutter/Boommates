@@ -660,7 +660,7 @@ public class MainActivity extends AppCompatActivity {
         private ArrayList<String> chores;
         private Context context;
 
-        public ChoreBoomAdapter(ArrayList<String> chores) {
+        ChoreBoomAdapter(ArrayList<String> chores) {
             this.chores = chores;
             Collections.sort(this.chores);
         }
@@ -744,11 +744,11 @@ public class MainActivity extends AppCompatActivity {
             return chores.size();
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder {
+        class ViewHolder extends RecyclerView.ViewHolder {
             private TextView tv_chore;
             private Button button_boom;
 
-            public ViewHolder(View view) {
+            ViewHolder(View view) {
                 super(view);
                 tv_chore = view.findViewById(R.id.card_name);
                 button_boom = view.findViewById(R.id.card_button);

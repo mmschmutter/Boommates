@@ -41,7 +41,7 @@ public class LoginActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
 
         ImageView logo = (ImageView) findViewById(R.id.login_logo);
-        logo.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.mipmap.temp_icon));
+        logo.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_launcher));
 
         loginInputLayoutEmail = (TextInputLayout) findViewById(R.id.login_input_layout_email);
         loginInputLayoutPassword = (TextInputLayout) findViewById(R.id.login_input_layout_password);
