@@ -45,16 +45,16 @@
 
         <ImageView
             android:id="@+id/first_x"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             app:layout_constraintLeft_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/your_chore_banner"
             tools:src="@drawable/boom_x" />
 
         <ImageView
             android:id="@+id/second_x"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             android:layout_marginEnd="15dp"
             android:adjustViewBounds="true"
             app:layout_constraintLeft_toRightOf="@id/first_x"
@@ -64,16 +64,16 @@
 
         <ImageView
             android:id="@+id/fourth_x"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             app:layout_constraintRight_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/your_chore_banner"
             tools:src="@drawable/boom_x_empty" />
 
         <ImageView
             android:id="@+id/third_x"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="85dp"
+            android:layout_height="85dp"
             android:layout_marginStart="15dp"
             app:layout_constraintLeft_toRightOf="@+id/horizontal_middle"
             app:layout_constraintRight_toLeftOf="@id/fourth_x"
