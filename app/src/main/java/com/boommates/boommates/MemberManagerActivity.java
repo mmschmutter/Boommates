@@ -24,6 +24,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
 
 
 public class MemberManagerActivity extends AppCompatActivity {
@@ -72,12 +73,22 @@ public class MemberManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot memberSnap, String s) {
                         Log.d(TAG + "Added", memberSnap.toString());
-                        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
-                        if (!memberEmail.equals(user.getEmail())) {
-                            members.add(memberEmail);
+                        String memberID = memberSnap.getKey();
+                        if (!memberID.equals(user.getUid())) {
+                            userList.child(memberID).child("userEmail").addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(DataSnapshot memberEmailSnap) {
+                                    members.add(memberEmailSnap.getValue(String.class));
+                                    updateUI();
+                                    progressBar.setVisibility(View.GONE);
+                                }
+
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG + "Cancelled", databaseError.toString());
+                                }
+                            });
                         }
-                        updateUI();
-                        progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
@@ -88,13 +99,24 @@ public class MemberManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(DataSnapshot memberSnap) {
                         Log.d(TAG + "Removed", memberSnap.toString());
-                        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
-                        for (String member : members) {
-                            if (member.equals(memberEmail)) {
-                                members.remove(member);
+                        userList.child(memberSnap.getKey()).child("userEmail").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot memberEmailSnap) {
+                                String memberEmail = memberEmailSnap.getValue(String.class);
+                                Iterator<String> membersIterator = members.iterator();
+                                while (membersIterator.hasNext()) {
+                                    if (membersIterator.next().equals(memberEmail)) {
+                                        membersIterator.remove();
+                                    }
+                                }
+                                updateUI();
                             }
-                        }
-                        updateUI();
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG + "Cancelled", databaseError.toString());
+                            }
+                        });
                     }
 
                     @Override
@@ -151,18 +173,20 @@ public class MemberManagerActivity extends AppCompatActivity {
             viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+                    userList.orderByChild("userEmail").equalTo(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
-                        public void onDataChange(final DataSnapshot userGroupSnap) {
-                            groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").orderByChild("userEmail").equalTo(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                        public void onDataChange(DataSnapshot usersSnap) {
+                            final DataSnapshot targetUser = usersSnap.getChildren().iterator().next();
+                            userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot groupMembersSnap) {
-                                    final DataSnapshot firstUser = groupMembersSnap.getChildren().iterator().next();
-                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(firstUser.getKey()).child("userChore").addListenerForSingleValueEvent(new ValueEventListener() {
+                                public void onDataChange(final DataSnapshot userGroupSnap) {
+                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").orderByKey().equalTo(targetUser.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
-                                        public void onDataChange(DataSnapshot userChoreSnap) {
-                                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(userChoreSnap.getValue(String.class)).getRef().removeValue();
-                                            firstUser.getRef().removeValue();
+                                        public void onDataChange(DataSnapshot groupMembersSnap) {
+                                            DataSnapshot targetMember = groupMembersSnap.getChildren().iterator().next();
+                                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(targetMember.getValue(String.class)).getRef().removeValue();
+                                            targetMember.getRef().removeValue();
+                                            targetUser.getRef().child("userGroup").setValue("none");
                                         }
 
                                         @Override
@@ -177,18 +201,6 @@ public class MemberManagerActivity extends AppCompatActivity {
                                     Log.d(TAG + "Cancelled", databaseError.toString());
                                 }
                             });
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG + "Cancelled", databaseError.toString());
-                        }
-                    });
-
-                    userList.orderByChild("userEmail").equalTo(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot usersSnap) {
-                            usersSnap.getChildren().iterator().next().child("userGroup").getRef().setValue("none");
                         }
 
                         @Override
