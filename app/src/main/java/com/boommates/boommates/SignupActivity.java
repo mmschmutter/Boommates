@@ -20,7 +20,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
@@ -34,7 +33,6 @@ public class SignupActivity extends AppCompatActivity {
     private Button btnSignUp, btnLinkToLogIn;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private DatabaseReference boommatesDB;
     private EditText signupInputEmail, signupInputPassword, signupInputConfirmPassword;
     private TextInputLayout signupInputLayoutEmail, signupInputLayoutPassword, signupInputLayoutConfirmPassword;
 
@@ -45,7 +43,6 @@ public class SignupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_signup);
         getSupportActionBar().setTitle(getString(R.string.signup_title));
         auth = FirebaseAuth.getInstance();
-        boommatesDB = FirebaseDatabase.getInstance().getReference();
 
         directions = (TextView) findViewById(R.id.signup_directions);
         directions.setText(R.string.create_account_directions);
@@ -132,7 +129,7 @@ public class SignupActivity extends AppCompatActivity {
                             userValues.put("userToken", "none");
                             Map<String, Object> childUpdates = new HashMap<>();
                             childUpdates.put("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid(), userValues);
-                            boommatesDB.updateChildren(childUpdates);
+                            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
                             Intent intent = new Intent(SignupActivity.this, GroupChooserActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);

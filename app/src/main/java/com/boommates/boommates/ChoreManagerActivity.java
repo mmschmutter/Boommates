@@ -38,7 +38,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
     private final String TAG = "ChoreManager";
 
-    private DatabaseReference boommatesDB, groupList, userList;
+    private DatabaseReference groupList, userList;
     private RecyclerView choreView;
     private FirebaseUser user;
     private RecyclerView.Adapter adapter;
@@ -108,13 +108,12 @@ public class ChoreManagerActivity extends AppCompatActivity {
                 });
             }
         });
-        boommatesDB = FirebaseDatabase.getInstance().getReference();
         userList = FirebaseDatabase.getInstance().getReference("users");
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String userGroup = dataSnapshot.getValue(String.class);
+            public void onDataChange(DataSnapshot userGroupSnap) {
+                String userGroup = userGroupSnap.getValue(String.class);
                 DatabaseReference choreList = groupList.child(userGroup).child("groupChores");
                 choreList.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
@@ -245,7 +244,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
                                 choreValues.put("choreUser", chorelessMember);
                                 Map<String, Object> childUpdates = new HashMap<>();
                                 childUpdates.put("/groups/" + userGroupSnap.getValue(String.class) + "/groupChores/" + choreName, choreValues);
-                                boommatesDB.updateChildren(childUpdates);
+                                FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
                                 groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(chorelessMember).setValue(choreName);
                             }
 
