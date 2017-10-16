@@ -72,12 +72,70 @@ public class MainActivity extends AppCompatActivity {
             userList.child(user.getUid()).child("userToken").setValue(FirebaseInstanceId.getInstance().getToken());
             chores = new ArrayList<>();
             rotateChores();
-            initDashboard();
-            initChoreView();
+            userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot userGroupSnap) {
+                    String groupID = userGroupSnap.getValue(String.class);
+                    if (groupID.equals("none")) {
+                        Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        checkBoomExpirations(groupID);
+                        initDashboard(groupID);
+                        initChoreView(groupID);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG + "Cancelled", databaseError.toString());
+                }
+            });
         }
     }
 
-    private void initDashboard() {
+    private void checkBoomExpirations(String groupID) {
+        groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot groupSnap) {
+                databaseTime.setValue(ServerValue.TIMESTAMP);
+                databaseTime.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot currentTimeSnap) {
+                        long currentTime = currentTimeSnap.getValue(Long.class);
+                        Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
+                        for (DataSnapshot chore : groupChoresSnap) {
+                            long lastBoomTime = chore.child("lastBoom").getValue(Long.class);
+                            if ((currentTime - lastBoomTime) >= 86400000) {
+                                chore.getRef().child("boomNumber").setValue(0);
+                                chore.getRef().child("lastBoom").setValue(0);
+                                chore.getRef().child("gracePeriodEnd").setValue(0);
+                                Iterable<DataSnapshot> groupMembersSnap = groupSnap.child("groupMembers").getChildren();
+                                for (DataSnapshot member : groupMembersSnap) {
+                                    chore.getRef().child(member.getKey()).setValue(0);
+                                }
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG + "Cancelled", databaseError.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG + "Cancelled", databaseError.toString());
+            }
+
+        });
+    }
+
+    private void initDashboard(final String groupID) {
         header = (TextView) findViewById(R.id.header);
         header.setText(R.string.header);
         yourChoreView = (TextView) findViewById(R.id.your_chore_banner);
@@ -86,72 +144,54 @@ public class MainActivity extends AppCompatActivity {
         thirdX = (ImageView) findViewById(R.id.third_x);
         fourthX = (ImageView) findViewById(R.id.fourth_x);
         timerText = (TextView) findViewById(R.id.timer);
-        userList.child(user.getUid()).child("userGroup").addValueEventListener(new ValueEventListener() {
+        groupList.child(groupID).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot userGroupSnap) {
-                String groupID = userGroupSnap.getValue(String.class);
-                if (groupID.equals("none")) {
-                    Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    groupList.child(groupID).addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(final DataSnapshot groupSnap) {
-                            if (groupSnap.child("groupMembers").child(user.getUid()).exists()) {
-                                final String yourChoreName = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
-                                if (!yourChoreName.equals("none")) {
-                                    yourChoreView.setText(yourChoreName);
-                                    if (groupSnap.child("groupChores").child(yourChoreName).child("boomNumber").exists() && groupSnap.child("groupChores").child(yourChoreName).child("lastBoom").exists()) {
-                                        final int boomNumber = groupSnap.child("groupChores").child(yourChoreName).child("boomNumber").getValue(Integer.class);
-                                        final long lastBoomTime = groupSnap.child("groupChores").child(yourChoreName).child("lastBoom").getValue(Long.class);
-                                        databaseTime.setValue(ServerValue.TIMESTAMP);
-                                        databaseTime.addListenerForSingleValueEvent(new ValueEventListener() {
-                                            @Override
-                                            public void onDataChange(final DataSnapshot currentTimeSnap) {
-                                                long currentTime = currentTimeSnap.getValue(Long.class);
-                                                if (timer != null) {
-                                                    timer.cancel();
-                                                    timer = null;
-                                                }
-                                                long remainingTime = 86400000 - (currentTime - lastBoomTime);
-                                                if (boomNumber == 0) {
-                                                    setNoXs();
-                                                } else if (boomNumber == 1) {
-                                                    setOneX(remainingTime);
-                                                } else if (boomNumber == 2) {
-                                                    long gracePeriodEndTime = groupSnap.child("groupChores").child(yourChoreName).child("gracePeriodEnd").getValue(Long.class);
-                                                    if (currentTime > gracePeriodEndTime) {
-                                                        setTwoXs(remainingTime);
-                                                    } else {
-                                                        setTwoXsGrace(gracePeriodEndTime - currentTime);
-                                                    }
-                                                } else if (boomNumber == 3) {
-                                                    setThreeXs(remainingTime);
-                                                }
-                                                setXToasts();
-                                                showDashboard();
-                                            }
-
-                                            @Override
-                                            public void onCancelled(DatabaseError databaseError) {
-                                                Log.d(TAG + "Cancelled", databaseError.toString());
-                                            }
-                                        });
+            public void onDataChange(final DataSnapshot groupSnap) {
+                if (groupSnap.child("groupMembers").child(user.getUid()).exists()) {
+                    final String yourChoreName = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
+                    if (!yourChoreName.equals("none")) {
+                        yourChoreView.setText(yourChoreName);
+                        final DataSnapshot yourChoreSnap = groupSnap.child("groupChores").child(yourChoreName);
+                        if (yourChoreSnap.child("boomNumber").exists() && yourChoreSnap.child("lastBoom").exists()) {
+                            final int boomNumber = yourChoreSnap.child("boomNumber").getValue(Integer.class);
+                            final long lastBoomTime = yourChoreSnap.child("lastBoom").getValue(Long.class);
+                            databaseTime.setValue(ServerValue.TIMESTAMP);
+                            databaseTime.addListenerForSingleValueEvent(new ValueEventListener() {
+                                @Override
+                                public void onDataChange(final DataSnapshot currentTimeSnap) {
+                                    long currentTime = currentTimeSnap.getValue(Long.class);
+                                    if (timer != null) {
+                                        timer.cancel();
+                                        timer = null;
                                     }
-                                } else {
-                                    setNoChore();
+                                    long remainingTime = 86400000 - (currentTime - lastBoomTime);
+                                    if (boomNumber == 0) {
+                                        setNoXs();
+                                    } else if (boomNumber == 1) {
+                                        setOneX(remainingTime, yourChoreSnap, groupID);
+                                    } else if (boomNumber == 2) {
+                                        long gracePeriodEndTime = groupSnap.child("groupChores").child(yourChoreName).child("gracePeriodEnd").getValue(Long.class);
+                                        if (currentTime > gracePeriodEndTime) {
+                                            setTwoXs(remainingTime, yourChoreSnap, groupID);
+                                        } else {
+                                            setTwoXsGrace(gracePeriodEndTime - currentTime, yourChoreSnap, groupID);
+                                        }
+                                    } else if (boomNumber == 3) {
+                                        setThreeXs(remainingTime, yourChoreSnap, groupID);
+                                    }
+                                    setXToasts();
+                                    showDashboard();
                                 }
-                            }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG + "Cancelled", databaseError.toString());
+                                @Override
+                                public void onCancelled(DatabaseError databaseError) {
+                                    Log.d(TAG + "Cancelled", databaseError.toString());
+                                }
+                            });
                         }
-
-                    });
+                    } else {
+                        setNoChore();
+                    }
                 }
             }
 
@@ -159,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
             public void onCancelled(DatabaseError databaseError) {
                 Log.d(TAG + "Cancelled", databaseError.toString());
             }
+
         });
     }
 
@@ -170,7 +211,7 @@ public class MainActivity extends AppCompatActivity {
         timerText.setText(getText(R.string.no_booms));
     }
 
-    private void setOneX(long remainingTime) {
+    private void setOneX(long remainingTime, final DataSnapshot chore, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -191,12 +232,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-
+                checkBoomExpirations(groupID);
             }
         }.start();
     }
 
-    private void setTwoXsGrace(long remainingTime) {
+    private void setTwoXsGrace(long remainingTime, final DataSnapshot chore, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -217,32 +258,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                timer.cancel();
-                timer = null;
-                timer = new CountDownTimer(86400000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                        long secondsInMilli = 1000;
-                        long minutesInMilli = secondsInMilli * 60;
-                        long hoursInMilli = minutesInMilli * 60;
-                        long elapsedHours = millisUntilFinished / hoursInMilli;
-                        millisUntilFinished = millisUntilFinished % hoursInMilli;
-                        long elapsedMinutes = millisUntilFinished / minutesInMilli;
-                        millisUntilFinished = millisUntilFinished % minutesInMilli;
-                        long elapsedSeconds = millisUntilFinished / secondsInMilli;
-                        String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                        String combinedText = timerString + " " + getString(R.string.timer_reset);
-                        timerText.setText(combinedText);
-                    }
-
-                    public void onFinish() {
-
-                    }
-                }.start();
+                setTwoXs(86400000, chore, groupID);
             }
         }.start();
     }
 
-    private void setTwoXs(long remainingTime) {
+    private void setTwoXs(long remainingTime, final DataSnapshot chore, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -258,17 +279,17 @@ public class MainActivity extends AppCompatActivity {
                 millisUntilFinished = millisUntilFinished % minutesInMilli;
                 long elapsedSeconds = millisUntilFinished / secondsInMilli;
                 String timerString = String.format("%02d:%02d:%02d", elapsedHours, elapsedMinutes, elapsedSeconds);
-                String combinedText = timerString + " " + getString(R.string.timer_vulnerable);
+                String combinedText = timerString + " " + getString(R.string.timer_reset);
                 timerText.setText(combinedText);
             }
 
             public void onFinish() {
-
+                checkBoomExpirations(groupID);
             }
         }.start();
     }
 
-    private void setThreeXs(long remainingTime) {
+    private void setThreeXs(long remainingTime, final DataSnapshot chore, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
@@ -289,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-
+                checkBoomExpirations(groupID);
             }
         }.start();
     }
@@ -356,68 +377,59 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void initChoreView() {
+    private void initChoreView(final String groupID) {
         choreView = (RecyclerView) findViewById(R.id.chore_view);
         choreView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(getApplicationContext());
         choreView.setLayoutManager(layoutManager);
-        updateChoreView();
-        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+        updateChoreView(groupID);
+
+        DatabaseReference choreList = groupList.child(groupID).child("groupChores");
+
+        choreList.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot userGroupSnap) {
-                final DatabaseReference choreList = groupList.child(userGroupSnap.getValue(String.class)).child("groupChores");
+            public void onDataChange(DataSnapshot groupChoresSnap) {
+                if (!groupChoresSnap.hasChildren()) {
+                    bottomProgressBar.setVisibility(View.GONE);
+                }
+            }
 
-                choreList.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot groupChoresSnap) {
-                        if (!groupChoresSnap.hasChildren()) {
-                            bottomProgressBar.setVisibility(View.GONE);
-                        }
-                    }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG + "Cancelled", databaseError.toString());
+            }
+        });
 
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
+        choreList.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG + "Added", dataSnapshot.toString());
+                chores.add(dataSnapshot.getKey());
+                updateChoreView(groupID);
+                bottomProgressBar.setVisibility(View.GONE);
+            }
 
-                choreList.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG + "Added", dataSnapshot.toString());
-                        chores.add(dataSnapshot.getKey());
-                        updateChoreView();
-                        bottomProgressBar.setVisibility(View.GONE);
-                    }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG + "Changed", dataSnapshot.toString());
+            }
 
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG + "Changed", dataSnapshot.toString());
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                Log.d(TAG + "Removed", dataSnapshot.toString());
+                String choreName = dataSnapshot.getKey();
+                for (String chore : chores) {
+                    if (chore.equals(choreName)) {
+                        chores.remove(chore);
+                        break;
                     }
+                }
+                updateChoreView(groupID);
+            }
 
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        Log.d(TAG + "Removed", dataSnapshot.toString());
-                        String choreName = dataSnapshot.getKey();
-                        for (String chore : chores) {
-                            if (chore.equals(choreName)) {
-                                chores.remove(chore);
-                                break;
-                            }
-                        }
-                        updateChoreView();
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG + "Moved", dataSnapshot.toString());
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+                Log.d(TAG + "Moved", dataSnapshot.toString());
             }
 
             @Override
@@ -427,29 +439,19 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateChoreView() {
-        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+    private void updateChoreView(String groupID) {
+        groupList.child(groupID).child("groupMembers").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
-            public void onDataChange(final DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(final DataSnapshot userChoreSnap) {
-                        String myChore = userChoreSnap.getValue(String.class);
-                        if (myChore != null && !myChore.equals("none")) {
-                            ArrayList<String> cleanedChores = new ArrayList<>(chores);
-                            cleanedChores.remove(myChore);
-                            adapter = new ChoreBoomAdapter(cleanedChores);
-                        } else {
-                            adapter = new ChoreBoomAdapter(chores);
-                        }
-                        choreView.setAdapter(adapter);
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
+            public void onDataChange(DataSnapshot userChoreSnap) {
+                String myChore = userChoreSnap.getValue(String.class);
+                if (myChore != null && !myChore.equals("none")) {
+                    ArrayList<String> cleanedChores = new ArrayList<>(chores);
+                    cleanedChores.remove(myChore);
+                    adapter = new ChoreBoomAdapter(cleanedChores);
+                } else {
+                    adapter = new ChoreBoomAdapter(chores);
+                }
+                choreView.setAdapter(adapter);
             }
 
             @Override
@@ -696,6 +698,8 @@ public class MainActivity extends AppCompatActivity {
                                                 if (boomNumber == 1) {
                                                     groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("gracePeriodEnd").setValue(currentTime + 86400000);
                                                     groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime + 86400000);
+                                                } else {
+                                                    groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime);
                                                 }
                                                 groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("boomNumber").setValue(boomNumber + 1);
                                                 groupList.child(userGroup).child("groupChores").child(chores.get(i)).child(user.getUid()).setValue(currentTime);
