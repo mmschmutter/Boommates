@@ -58,7 +58,7 @@ public class MemberManagerActivity extends AppCompatActivity {
                 memberList.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot membersSnap) {
-                        if (!membersSnap.hasChildren()) {
+                        if (membersSnap.getChildrenCount() < 2) {
                             progressBar.setVisibility(View.GONE);
                         }
                     }
