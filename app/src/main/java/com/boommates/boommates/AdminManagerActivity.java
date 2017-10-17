@@ -55,32 +55,29 @@ public class AdminManagerActivity extends AppCompatActivity {
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot groupSnap) {
-                DatabaseReference memberList = groupList.child(groupSnap.getValue(String.class)).child("groupMembers");
-                memberList.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot membersSnap) {
-                        if (!membersSnap.hasChildren()) {
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
+            public void onDataChange(final DataSnapshot userGroupSnap) {
+                DatabaseReference memberList = groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers");
 
                 memberList.addChildEventListener(new ChildEventListener() {
                     @Override
                     public void onChildAdded(DataSnapshot memberSnap, String s) {
                         Log.d(TAG + "Added", memberSnap.toString());
-                        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
-                        if (!memberEmail.equals(user.getEmail())) {
-                            members.add(memberEmail);
-                        }
-                        updateUI();
-                        progressBar.setVisibility(View.GONE);
+                        userList.child(memberSnap.getKey()).child("userEmail").addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot memberEmailSnap) {
+                                String memberEmail = memberEmailSnap.getValue(String.class);
+                                if (!memberEmail.equals(user.getEmail())) {
+                                    members.add(memberEmail);
+                                }
+                                updateUI();
+                                progressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG + "Cancelled", databaseError.toString());
+                            }
+                        });
                     }
 
                     @Override
@@ -157,15 +154,21 @@ public class AdminManagerActivity extends AppCompatActivity {
                     userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(final DataSnapshot userGroupSnap) {
-                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").orderByChild("choreUser").equalTo(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
+                            final String groupID = userGroupSnap.getValue(String.class);
+                            groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
-                                public void onDataChange(DataSnapshot choresSnap) {
-                                    if (choresSnap.exists() && choresSnap.hasChildren()) {
-                                        choresSnap.getChildren().iterator().next().getRef().removeValue();
+                                public void onDataChange(DataSnapshot groupSnap) {
+                                    groupList.child(groupID).child("groupAdmin").setValue(members.get(i));
+                                    String userChore = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
+                                    if (!userChore.equals("none")) {
+                                        groupList.child(groupID).child("groupChores").child(userChore).removeValue();
                                     }
-                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupAdmin").getRef().setValue(members.get(i));
-                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(user.getUid()).removeValue();
+                                    groupSnap.getRef().child("groupMembers").child(user.getUid()).removeValue();
                                     userList.child(user.getUid()).child("userGroup").setValue("none");
+                                    Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
+                                    for (DataSnapshot chore : groupChoresSnap) {
+                                        chore.child(user.getUid()).getRef().removeValue();
+                                    }
                                     Toast toast = Toast.makeText(AdminManagerActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
                                     TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
                                     text.setGravity(Gravity.CENTER);

@@ -610,10 +610,7 @@ public class MainActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
-                                Intent intent = new Intent(MainActivity.this, AdminManagerActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
+                                startActivity(new Intent(MainActivity.this, AdminManagerActivity.class));
                             }
                         } else {
                             String userChore = groupMembersSnap.child(user.getUid()).getValue(String.class);
@@ -622,6 +619,10 @@ public class MainActivity extends AppCompatActivity {
                             }
                             groupMembersSnap.getRef().child(user.getUid()).removeValue();
                             userList.child(user.getUid()).child("userGroup").setValue("none");
+                            Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
+                            for (DataSnapshot chore : groupChoresSnap) {
+                                chore.child(user.getUid()).getRef().removeValue();
+                            }
                             Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
                             TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
                             text.setGravity(Gravity.CENTER);
