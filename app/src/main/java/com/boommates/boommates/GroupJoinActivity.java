@@ -38,6 +38,8 @@ public class GroupJoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_join);
         getSupportActionBar().setTitle(getString(R.string.join_group_title));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
         directions = (TextView) findViewById(R.id.join_directions);
         directions.setText(R.string.join_directions);
@@ -138,5 +140,11 @@ public class GroupJoinActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.GONE);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
