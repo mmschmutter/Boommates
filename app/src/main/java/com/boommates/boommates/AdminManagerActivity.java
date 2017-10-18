@@ -155,6 +155,7 @@ public class AdminManagerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+            viewHolder.tv_email.setTextSize(25);
             viewHolder.tv_email.setText(members.get(i));
             viewHolder.button_set_admin.setOnClickListener(new View.OnClickListener() {
                 @Override
