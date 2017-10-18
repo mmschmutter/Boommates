@@ -177,6 +177,7 @@ public class MemberManagerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+            viewHolder.tv_email.setTextSize(25);
             viewHolder.tv_email.setText(members.get(i));
             viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
                 @Override
