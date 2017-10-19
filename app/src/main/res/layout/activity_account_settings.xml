@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical"
+    android:paddingBottom="15dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp">
+
+    <Button
+        android:id="@+id/btn_account_logout"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_account_logout"
+        android:textColor="@color/colorText" />
+
+    <Button
+        android:id="@+id/btn_account_leave"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_account_leave"
+        android:textColor="@color/colorText" />
+
+    <Button
+        android:id="@+id/btn_account_password"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_account_password"
+        android:textColor="@color/colorText" />
+
+    <Button
+        android:id="@+id/btn_account_delete"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_account_delete"
+        android:textColor="@color/colorText" />
+
+    <ProgressBar
+        android:id="@+id/progress_settings"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp" />
+
+</LinearLayout>

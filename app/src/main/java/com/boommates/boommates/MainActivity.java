@@ -1,6 +1,5 @@
 package com.boommates.boommates;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -45,10 +44,10 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView choreView;
     private FirebaseUser user;
     private ArrayList<String> chores;
-    private TextView header, yourChoreView, timerText;
+    private TextView yourChoreView;
+    private TextView timerText;
     private ImageView firstX, secondX, thirdX, fourthX;
     private CountDownTimer timer;
-    private RecyclerView.LayoutManager layoutManager;
     private RecyclerView.Adapter adapter;
 
     @Override
@@ -57,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        } else if (!user.isEmailVerified()) {
+            Intent intent = new Intent(MainActivity.this, VerifyEmailActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
@@ -136,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDashboard(final String groupID) {
-        header = (TextView) findViewById(R.id.header);
+        TextView header = (TextView) findViewById(R.id.header);
         header.setText(R.string.header);
         yourChoreView = (TextView) findViewById(R.id.your_chore_banner);
         firstX = (ImageView) findViewById(R.id.first_x);
@@ -339,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Toast toast = Toast.makeText(MainActivity.this, getText(R.string.first_x_explanation), Toast.LENGTH_LONG);
-                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                TextView text = toast.getView().findViewById(android.R.id.message);
                 text.setGravity(Gravity.CENTER);
                 toast.show();
                 return false;
@@ -349,7 +353,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Toast toast = Toast.makeText(MainActivity.this, getText(R.string.second_x_explanation), Toast.LENGTH_LONG);
-                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                TextView text = toast.getView().findViewById(android.R.id.message);
                 text.setGravity(Gravity.CENTER);
                 toast.show();
                 return false;
@@ -359,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Toast toast = Toast.makeText(MainActivity.this, getText(R.string.third_x_explanation), Toast.LENGTH_LONG);
-                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                TextView text = toast.getView().findViewById(android.R.id.message);
                 text.setGravity(Gravity.CENTER);
                 toast.show();
                 return false;
@@ -369,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 Toast toast = Toast.makeText(MainActivity.this, getText(R.string.fourth_x_explanation), Toast.LENGTH_LONG);
-                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                TextView text = toast.getView().findViewById(android.R.id.message);
                 text.setGravity(Gravity.CENTER);
                 toast.show();
                 return false;
@@ -380,7 +384,7 @@ public class MainActivity extends AppCompatActivity {
     private void initChoreView(final String groupID) {
         choreView = (RecyclerView) findViewById(R.id.chore_view);
         choreView.setHasFixedSize(true);
-        layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         choreView.setLayoutManager(layoutManager);
         updateChoreView(groupID);
 
@@ -388,8 +392,8 @@ public class MainActivity extends AppCompatActivity {
 
         choreList.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot groupChoresSnap) {
-                if (!groupChoresSnap.hasChildren()) {
+            public void onDataChange(DataSnapshot choresSnap) {
+                if (!choresSnap.hasChildren()) {
                     bottomProgressBar.setVisibility(View.GONE);
                 }
             }
@@ -402,22 +406,22 @@ public class MainActivity extends AppCompatActivity {
 
         choreList.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG + "Added", dataSnapshot.toString());
-                chores.add(dataSnapshot.getKey());
+            public void onChildAdded(DataSnapshot choresSnap, String s) {
+                Log.d(TAG + "Added", choresSnap.toString());
+                chores.add(choresSnap.getKey());
                 updateChoreView(groupID);
                 bottomProgressBar.setVisibility(View.GONE);
             }
 
             @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG + "Changed", dataSnapshot.toString());
+            public void onChildChanged(DataSnapshot choresSnap, String s) {
+                Log.d(TAG + "Changed", choresSnap.toString());
             }
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                Log.d(TAG + "Removed", dataSnapshot.toString());
-                String choreName = dataSnapshot.getKey();
+            public void onChildRemoved(DataSnapshot choresSnap) {
+                Log.d(TAG + "Removed", choresSnap.toString());
+                String choreName = choresSnap.getKey();
                 for (String chore : chores) {
                     if (chore.equals(choreName)) {
                         chores.remove(chore);
@@ -428,8 +432,8 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG + "Moved", dataSnapshot.toString());
+            public void onChildMoved(DataSnapshot choresSnap, String s) {
+                Log.d(TAG + "Moved", choresSnap.toString());
             }
 
             @Override
@@ -572,17 +576,17 @@ public class MainActivity extends AppCompatActivity {
             case R.id.action_remove_members:
                 startActivity(new Intent(MainActivity.this, MemberManagerActivity.class));
                 break;
-            case R.id.action_leave_group:
+            case R.id.action_account_settings:
                 leaveGroup();
                 break;
-            case R.id.action_logout:
+            /*case R.id.action_logout:
                 userList.child(user.getUid()).child("userToken").setValue("none");
                 FirebaseAuth.getInstance().signOut();
                 Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
-                break;
+                break;*/
         }
         return super.onOptionsItemSelected(item);
     }
@@ -602,7 +606,7 @@ public class MainActivity extends AppCompatActivity {
                                 groupList.child(userGroup).removeValue();
                                 userList.child(user.getUid()).child("userGroup").setValue("none");
                                 Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
-                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                TextView text = toast.getView().findViewById(android.R.id.message);
                                 text.setGravity(Gravity.CENTER);
                                 toast.show();
                                 Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
@@ -624,7 +628,7 @@ public class MainActivity extends AppCompatActivity {
                                 chore.child(user.getUid()).getRef().removeValue();
                             }
                             Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
-                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
                             text.setGravity(Gravity.CENTER);
                             toast.show();
                             Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
@@ -650,7 +654,6 @@ public class MainActivity extends AppCompatActivity {
 
     class ChoreBoomAdapter extends RecyclerView.Adapter<ChoreBoomAdapter.ViewHolder> {
         private ArrayList<String> chores;
-        private Context context;
 
         ChoreBoomAdapter(ArrayList<String> chores) {
             this.chores = chores;
@@ -660,7 +663,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
-            this.context = viewGroup.getContext();
             return new ViewHolder(view);
         }
 
@@ -678,34 +680,34 @@ public class MainActivity extends AppCompatActivity {
                             userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(final DataSnapshot userGroupSnap) {
-                                    final String userGroup = userGroupSnap.getValue(String.class);
-                                    groupList.child(userGroup).child("groupChores").child(chores.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    final String groupID = userGroupSnap.getValue(String.class);
+                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot choreSnap) {
                                             long lastBoomTime = choreSnap.child(user.getUid()).getValue(Long.class);
                                             long gracePeriodEndTime = choreSnap.child("gracePeriodEnd").getValue(Long.class);
                                             if ((currentTime - lastBoomTime) < 86400000) {
                                                 Toast toast = Toast.makeText(MainActivity.this, "You have already BOOMed " + chores.get(i) + " within the past 24 hours", Toast.LENGTH_SHORT);
-                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                TextView text = toast.getView().findViewById(android.R.id.message);
                                                 text.setGravity(Gravity.CENTER);
                                                 toast.show();
                                             } else if (currentTime < gracePeriodEndTime) {
                                                 Toast toast = Toast.makeText(MainActivity.this, chores.get(i) + " is within the 24 hour grace period and cannot be BOOMed", Toast.LENGTH_SHORT);
-                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                TextView text = toast.getView().findViewById(android.R.id.message);
                                                 text.setGravity(Gravity.CENTER);
                                                 toast.show();
                                             } else {
                                                 int boomNumber = choreSnap.child("boomNumber").getValue(Integer.class);
                                                 if (boomNumber == 1) {
-                                                    groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("gracePeriodEnd").setValue(currentTime + 86400000);
-                                                    groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime + 86400000);
+                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("gracePeriodEnd").setValue(currentTime + 86400000);
+                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime + 86400000);
                                                 } else {
-                                                    groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime);
+                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime);
                                                 }
-                                                groupList.child(userGroup).child("groupChores").child(chores.get(i)).child("boomNumber").setValue(boomNumber + 1);
-                                                groupList.child(userGroup).child("groupChores").child(chores.get(i)).child(user.getUid()).setValue(currentTime);
+                                                groupList.child(groupID).child("groupChores").child(chores.get(i)).child("boomNumber").setValue(boomNumber + 1);
+                                                groupList.child(groupID).child("groupChores").child(chores.get(i)).child(user.getUid()).setValue(currentTime);
                                                 Toast toast = Toast.makeText(MainActivity.this, chores.get(i) + " BOOMed", Toast.LENGTH_SHORT);
-                                                TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                                TextView text = toast.getView().findViewById(android.R.id.message);
                                                 text.setGravity(Gravity.CENTER);
                                                 toast.show();
                                             }

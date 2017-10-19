@@ -1,6 +1,5 @@
 package com.boommates.boommates;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -161,7 +160,6 @@ public class MemberManagerActivity extends AppCompatActivity {
 
     class MemberManagerAdapter extends RecyclerView.Adapter<MemberManagerAdapter.ViewHolder> {
         private ArrayList<String> members;
-        private Context context;
 
         MemberManagerAdapter(ArrayList<String> members) {
             this.members = members;
@@ -171,7 +169,6 @@ public class MemberManagerActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
-            this.context = viewGroup.getContext();
             return new ViewHolder(view);
         }
 
@@ -189,11 +186,12 @@ public class MemberManagerActivity extends AppCompatActivity {
                             userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(final DataSnapshot userGroupSnap) {
-                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").orderByKey().equalTo(targetUser.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
+                                    final String groupID = userGroupSnap.getValue(String.class);
+                                    groupList.child(groupID).child("groupMembers").orderByKey().equalTo(targetUser.getKey()).addListenerForSingleValueEvent(new ValueEventListener() {
                                         @Override
                                         public void onDataChange(DataSnapshot groupMembersSnap) {
                                             DataSnapshot targetMember = groupMembersSnap.getChildren().iterator().next();
-                                            groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(targetMember.getValue(String.class)).getRef().removeValue();
+                                            groupList.child(groupID).child("groupChores").child(targetMember.getValue(String.class)).getRef().removeValue();
                                             targetMember.getRef().removeValue();
                                             targetUser.getRef().child("userGroup").setValue("none");
                                         }

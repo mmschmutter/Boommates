@@ -1,6 +1,5 @@
 package com.boommates.boommates;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -36,7 +35,6 @@ public class AdminManagerActivity extends AppCompatActivity {
     private DatabaseReference groupList, userList;
     private RecyclerView memberView;
     private FirebaseUser user;
-    private RecyclerView.Adapter adapter;
     private ArrayList<String> members;
     private ProgressBar progressBar;
 
@@ -119,7 +117,7 @@ public class AdminManagerActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        adapter = new MemberManagerAdapter(members);
+        RecyclerView.Adapter adapter = new MemberManagerAdapter(members);
         memberView.setAdapter(adapter);
     }
 
@@ -139,7 +137,6 @@ public class AdminManagerActivity extends AppCompatActivity {
 
     class MemberManagerAdapter extends RecyclerView.Adapter<MemberManagerAdapter.ViewHolder> {
         private ArrayList<String> members;
-        private Context context;
 
         MemberManagerAdapter(ArrayList<String> members) {
             this.members = members;
@@ -149,7 +146,6 @@ public class AdminManagerActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
-            this.context = viewGroup.getContext();
             return new ViewHolder(view);
         }
 
@@ -179,7 +175,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                                         chore.child(user.getUid()).getRef().removeValue();
                                     }
                                     Toast toast = Toast.makeText(AdminManagerActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
-                                    TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    TextView text = toast.getView().findViewById(android.R.id.message);
                                     text.setGravity(Gravity.CENTER);
                                     toast.show();
                                     Intent intent = new Intent(AdminManagerActivity.this, GroupChooserActivity.class);

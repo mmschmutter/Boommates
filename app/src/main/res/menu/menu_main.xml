@@ -15,13 +15,9 @@
             app:showAsAction="never" />
     </group>
     <item
-        android:id="@+id/action_leave_group"
+        android:id="@+id/action_account_settings"
         android:orderInCategory="102"
-        android:title="@string/menu_leave_group"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_logout"
-        android:orderInCategory="103"
-        android:title="@string/menu_logout"
-        app:showAsAction="never" />
+        android:icon="@drawable/settings"
+        android:title="@string/menu_account_settings"
+        app:showAsAction="ifRoom" />
 </menu>

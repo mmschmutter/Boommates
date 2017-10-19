@@ -27,7 +27,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "LoginActivity";
 
-    private Button btnLogin, btnLinkToSignUp;
+    private Button btnLogin;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private EditText loginInputEmail, loginInputPassword;
@@ -51,7 +51,8 @@ public class LoginActivity extends AppCompatActivity {
         loginInputPassword = (EditText) findViewById(R.id.login_input_password);
 
         btnLogin = (Button) findViewById(R.id.btn_login);
-        btnLinkToSignUp = (Button) findViewById(R.id.btn_link_signup);
+        Button btnLinkToSignUp = (Button) findViewById(R.id.btn_link_signup);
+        Button btnPasswordReset = (Button) findViewById(R.id.btn_forgot_password);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,6 +70,52 @@ public class LoginActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        btnPasswordReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resetPassword();
+            }
+        });
+    }
+
+    private void resetPassword() {
+        loginInputEmail.setError(null);
+        loginInputPassword.setError(null);
+        loginInputLayoutEmail.setError(null);
+        loginInputLayoutPassword.setError(null);
+
+        String email = loginInputEmail.getText().toString().trim();
+
+        if (!checkEmail()) {
+            return;
+        }
+
+        loginInputEmail.setError(null);
+        loginInputPassword.setError(null);
+        loginInputLayoutEmail.setError(null);
+        loginInputLayoutPassword.setError(null);
+        loginInputLayoutEmail.setErrorEnabled(false);
+        loginInputLayoutPassword.setErrorEnabled(false);
+
+        auth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.password_reset_success), Toast.LENGTH_LONG);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                            Log.d(TAG, "Email sent.");
+                        } else {
+                            Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.password_reset_fail), Toast.LENGTH_LONG);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                        }
+                    }
+                });
     }
 
     private void submitForm() {
@@ -93,20 +140,22 @@ public class LoginActivity extends AppCompatActivity {
         loginInputLayoutEmail.setErrorEnabled(false);
         loginInputLayoutPassword.setErrorEnabled(false);
 
+        btnLogin.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
         auth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(LoginActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressBar.setVisibility(View.GONE);
                         if (!task.isSuccessful()) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            btnLogin.setVisibility(View.VISIBLE);
                             Toast toast = Toast.makeText(LoginActivity.this, getString(R.string.auth_failed), Toast.LENGTH_LONG);
-                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
                             text.setGravity(Gravity.CENTER);
                             toast.show();
-                            Log.d(TAG, "Login failed: " + task.getException());
                         } else {
+                            progressBar.setVisibility(View.INVISIBLE);
                             Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
@@ -163,6 +212,7 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
+        btnLogin.setVisibility(View.VISIBLE);
     }
 }

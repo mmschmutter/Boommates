@@ -2,6 +2,7 @@ package com.boommates.boommates;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
@@ -9,7 +10,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,10 +25,9 @@ public class GroupJoinActivity extends AppCompatActivity {
 
     private static final String TAG = "GJoinActivity";
 
-    private TextView directions;
     private Button btnJoinApt;
     private ProgressBar progressBar;
-    private EditText aptInputID;
+    private TextInputEditText aptInputID;
     private TextInputLayout aptInputLayout;
     private DatabaseReference groupList, userList;
     private FirebaseUser user;
@@ -41,11 +40,11 @@ public class GroupJoinActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        directions = (TextView) findViewById(R.id.join_directions);
+        TextView directions = (TextView) findViewById(R.id.join_directions);
         directions.setText(R.string.join_directions);
         aptInputLayout = (TextInputLayout) findViewById(R.id.apt_input);
         progressBar = (ProgressBar) findViewById(R.id.progress_join_apt);
-        aptInputID = (EditText) findViewById(R.id.input_apt_id);
+        aptInputID = (TextInputEditText) findViewById(R.id.input_apt_id);
         btnJoinApt = (Button) findViewById(R.id.btn_join_apt);
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
@@ -71,6 +70,7 @@ public class GroupJoinActivity extends AppCompatActivity {
         aptInputLayout.setError(null);
         aptInputLayout.setErrorEnabled(false);
 
+        btnJoinApt.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
         groupList.orderByChild("groupAdmin").equalTo(aptEmail).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -93,12 +93,14 @@ public class GroupJoinActivity extends AppCompatActivity {
                             Log.d(TAG + "Cancelled", databaseError.toString());
                         }
                     });
+                    progressBar.setVisibility(View.INVISIBLE);
                     Intent intent = new Intent(GroupJoinActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                     startActivity(intent);
                     finish();
                 } else {
-                    progressBar.setVisibility(View.GONE);
+                    progressBar.setVisibility(View.INVISIBLE);
+                    btnJoinApt.setVisibility(View.VISIBLE);
                     aptInputLayout.setError(getString(R.string.err_msg_group_id));
                     requestFocus(aptInputID);
                 }
@@ -139,7 +141,8 @@ public class GroupJoinActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
+        btnJoinApt.setVisibility(View.VISIBLE);
     }
 
     @Override

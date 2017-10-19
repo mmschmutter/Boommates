@@ -64,4 +64,20 @@
     <string name="left_group">You have successfully left the group</string>
     <string name="no_booms">No BOOMs, keep it up!</string>
     <string name="edit_tasks_warning">WARNING\nAdding or removing tasks will also reset BOOMs for all existing tasks</string>
+    <string name="btn_account_password">CHANGE PASSWORD</string>
+    <string name="btn_account_leave">LEAVE GROUP</string>
+    <string name="btn_account_delete">DELETE ACCOUNT</string>
+    <string name="btn_signup_cancel">CANCEL SIGN UP</string>
+    <string name="btn_forgot_password">Reset Your Password</string>
+    <string name="password_reset_success">Password reset link sent to email</string>
+    <string name="password_reset_fail">No account exists for that email</string>
+    <string name="verify_email_title">Verify Email</string>
+    <string name="verify_directions">Please check your email for verification</string>
+    <string name="signup_cancel_fail">Cannot cancel sign up at the moment</string>
+    <string name="signup_cancel_success">Sign up cancelled</string>
+    <string name="account_verified">Account verified!</string>
+    <string name="btn_check_verification">I DID!</string>
+    <string name="account_not_verified">Account still unverified\nPlease click the verification link in your email, wait a moment, and try again</string>
+    <string name="btn_account_logout">LOG OUT</string>
+    <string name="menu_account_settings">Account Settings</string>
 </resources>

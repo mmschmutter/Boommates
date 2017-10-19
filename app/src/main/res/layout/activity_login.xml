@@ -11,15 +11,15 @@
         android:id="@+id/login_logo"
         android:layout_width="200dp"
         android:layout_height="200dp"
-        tools:src="@mipmap/temp_icon" />
+        tools:src="@drawable/ic_launcher" />
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/login_input_layout_email"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp">
+        android:layout_marginTop="25dp">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/login_input_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/login_input_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,27 +43,47 @@
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="fill_parent"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="@string/btn_login"
-        android:textColor="@color/colorText" />
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_login"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/btn_login"
+            android:textColor="@color/colorText" />
+
+        <ProgressBar
+            android:id="@+id/progress_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/btn_link_signup"
-        android:layout_width="fill_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
         android:background="@android:color/transparent"
+        android:clickable="true"
         android:text="@string/btn_link_to_signup"
         android:textColor="@color/colorPrimaryDark" />
 
-    <ProgressBar
-        android:id="@+id/progress_login"
+    <Button
+        android:id="@+id/btn_forgot_password"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="-10dp"
+        android:background="@android:color/transparent"
+        android:text="@string/btn_forgot_password"
+        android:textColor="@color/colorPrimaryDark" />
+
 
 </LinearLayout>

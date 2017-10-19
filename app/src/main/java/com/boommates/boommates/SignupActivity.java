@@ -20,17 +20,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
     private static final String TAG = "SignupActivity";
 
-    private TextView directions;
-    private Button btnSignUp, btnLinkToLogIn;
+    private Button btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private EditText signupInputEmail, signupInputPassword, signupInputConfirmPassword;
@@ -44,7 +39,7 @@ public class SignupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.signup_title));
         auth = FirebaseAuth.getInstance();
 
-        directions = (TextView) findViewById(R.id.signup_directions);
+        TextView directions = (TextView) findViewById(R.id.signup_directions);
         directions.setText(R.string.create_account_directions);
         signupInputLayoutEmail = (TextInputLayout) findViewById(R.id.signup_input_layout_email);
         signupInputLayoutPassword = (TextInputLayout) findViewById(R.id.signup_input_layout_password);
@@ -56,7 +51,7 @@ public class SignupActivity extends AppCompatActivity {
         signupInputConfirmPassword = (EditText) findViewById(R.id.signup_input_confirm_password);
 
         btnSignUp = (Button) findViewById(R.id.btn_signup);
-        btnLinkToLogIn = (Button) findViewById(R.id.btn_link_login);
+        Button btnLinkToLogIn = (Button) findViewById(R.id.btn_link_login);
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +99,7 @@ public class SignupActivity extends AppCompatActivity {
         signupInputLayoutEmail.setErrorEnabled(false);
         signupInputLayoutPassword.setErrorEnabled(false);
 
+        btnSignUp.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
 
         auth.createUserWithEmailAndPassword(email, password)
@@ -111,29 +107,32 @@ public class SignupActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-                        progressBar.setVisibility(View.GONE);
                         if (!task.isSuccessful()) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            btnSignUp.setVisibility(View.VISIBLE);
                             Toast toast = Toast.makeText(SignupActivity.this, getString(R.string.failed_registration), Toast.LENGTH_LONG);
-                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
                             text.setGravity(Gravity.CENTER);
                             toast.show();
-                            Log.d(TAG, "Signup failed: " + task.getException());
                         } else {
-                            Toast toast = Toast.makeText(SignupActivity.this, getString(R.string.successful_registration), Toast.LENGTH_SHORT);
-                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                            text.setGravity(Gravity.CENTER);
-                            toast.show();
-                            Map<String, String> userValues = new HashMap<>();
-                            userValues.put("userEmail", FirebaseAuth.getInstance().getCurrentUser().getEmail());
-                            userValues.put("userGroup", "none");
-                            userValues.put("userToken", "none");
-                            Map<String, Object> childUpdates = new HashMap<>();
-                            childUpdates.put("/users/" + FirebaseAuth.getInstance().getCurrentUser().getUid(), userValues);
-                            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
-                            Intent intent = new Intent(SignupActivity.this, GroupChooserActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                            FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
+                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<Void> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "Email sent.");
+                                                progressBar.setVisibility(View.INVISIBLE);
+                                                Toast toast = Toast.makeText(SignupActivity.this, getString(R.string.successful_registration), Toast.LENGTH_SHORT);
+                                                TextView text = toast.getView().findViewById(android.R.id.message);
+                                                text.setGravity(Gravity.CENTER);
+                                                toast.show();
+                                                Intent intent = new Intent(SignupActivity.this, VerifyEmailActivity.class);
+                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                                finish();
+                                            }
+                                        }
+                                    });
                         }
                     }
                 });
@@ -195,6 +194,7 @@ public class SignupActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
+        btnSignUp.setVisibility(View.VISIBLE);
     }
 }

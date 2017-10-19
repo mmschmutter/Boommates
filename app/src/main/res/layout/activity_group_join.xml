@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="50dp">
 
-        <EditText
+        <android.support.design.widget.TextInputEditText
             android:id="@+id/input_apt_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,19 +32,27 @@
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
-    <Button
-        android:id="@+id/btn_join_apt"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="@string/btn_existing_apt"
-        android:textColor="@color/colorText" />
-
-    <ProgressBar
-        android:id="@+id/progress_join_apt"
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp" />
+        android:clipChildren="false"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/btn_join_apt"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="15dp"
+            android:background="@color/colorPrimaryDark"
+            android:text="@string/btn_existing_apt"
+            android:textColor="@color/colorText" />
+
+        <ProgressBar
+            android:id="@+id/progress_join_apt"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp" />
+    </RelativeLayout>
 
 </LinearLayout>

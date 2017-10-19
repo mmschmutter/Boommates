@@ -1,9 +1,9 @@
 package com.boommates.boommates;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,10 +40,8 @@ public class ChoreManagerActivity extends AppCompatActivity {
     private DatabaseReference groupList, userList;
     private RecyclerView choreView;
     private FirebaseUser user;
-    private RecyclerView.Adapter adapter;
     private ArrayList<String> chores;
     private ProgressBar progressBar;
-    private FloatingActionButton fab;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -56,14 +53,14 @@ public class ChoreManagerActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         Toast toast = Toast.makeText(ChoreManagerActivity.this, getText(R.string.edit_tasks_warning), Toast.LENGTH_LONG);
-        TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+        TextView text = toast.getView().findViewById(android.R.id.message);
         text.setGravity(Gravity.CENTER);
         toast.show();
         user = FirebaseAuth.getInstance().getCurrentUser();
         chores = new ArrayList<>();
         initChoreView();
         updateUI();
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setImageResource(R.drawable.plus_sign);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -71,29 +68,20 @@ public class ChoreManagerActivity extends AppCompatActivity {
                 userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot userGroupSnap) {
-                        groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                        groupList.child(userGroupSnap.getValue(String.class)).addListenerForSingleValueEvent(new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot groupMembersSnap) {
-                                final long numberOfMembers = groupMembersSnap.getChildrenCount();
-                                groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot groupChoresSnap) {
-                                        long numberOfChores = groupChoresSnap.getChildrenCount();
-                                        if (numberOfChores >= numberOfMembers) {
-                                            Toast toast = Toast.makeText(ChoreManagerActivity.this, getString(R.string.err_num_chores), Toast.LENGTH_LONG);
-                                            TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
-                                            text.setGravity(Gravity.CENTER);
-                                            toast.show();
-                                        } else {
-                                            createNewListItem();
-                                        }
-                                    }
+                            public void onDataChange(DataSnapshot groupSnap) {
+                                long numberOfMembers = groupSnap.child("groupMembers").getChildrenCount();
+                                long numberOfChores = groupSnap.child("groupChores").getChildrenCount();
+                                if (numberOfChores >= numberOfMembers) {
+                                    Toast toast = Toast.makeText(ChoreManagerActivity.this, getString(R.string.err_num_chores), Toast.LENGTH_LONG);
+                                    TextView text = toast.getView().findViewById(android.R.id.message);
+                                    text.setGravity(Gravity.CENTER);
+                                    toast.show();
+                                } else {
+                                    createNewListItem();
+                                }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError databaseError) {
-                                        Log.d(TAG + "Cancelled", databaseError.toString());
-                                    }
-                                });
                             }
 
                             @Override
@@ -115,12 +103,11 @@ public class ChoreManagerActivity extends AppCompatActivity {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot userGroupSnap) {
-                String userGroup = userGroupSnap.getValue(String.class);
-                DatabaseReference choreList = groupList.child(userGroup).child("groupChores");
+                DatabaseReference choreList = groupList.child(userGroupSnap.getValue(String.class)).child("groupChores");
                 choreList.addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        if (!dataSnapshot.hasChildren()) {
+                    public void onDataChange(DataSnapshot choresSnap) {
+                        if (!choresSnap.hasChildren()) {
                             progressBar.setVisibility(View.GONE);
                         }
                     }
@@ -133,22 +120,22 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
                 choreList.addChildEventListener(new ChildEventListener() {
                     @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG + "Added", dataSnapshot.toString());
-                        chores.add(dataSnapshot.getKey());
+                    public void onChildAdded(DataSnapshot choresSnap, String s) {
+                        Log.d(TAG + "Added", choresSnap.toString());
+                        chores.add(choresSnap.getKey());
                         updateUI();
                         progressBar.setVisibility(View.GONE);
                     }
 
                     @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG + "Changed", dataSnapshot.toString());
+                    public void onChildChanged(DataSnapshot choresSnap, String s) {
+                        Log.d(TAG + "Changed", choresSnap.toString());
                     }
 
                     @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-                        Log.d(TAG + "Removed", dataSnapshot.toString());
-                        String choreName = dataSnapshot.getKey();
+                    public void onChildRemoved(DataSnapshot choresSnap) {
+                        Log.d(TAG + "Removed", choresSnap.toString());
+                        String choreName = choresSnap.getKey();
                         for (String chore : chores) {
                             if (chore.equals(choreName)) {
                                 chores.remove(chore);
@@ -159,8 +146,8 @@ public class ChoreManagerActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-                        Log.d(TAG + "Moved", dataSnapshot.toString());
+                    public void onChildMoved(DataSnapshot choresSnap, String s) {
+                        Log.d(TAG + "Moved", choresSnap.toString());
                     }
 
                     @Override
@@ -182,10 +169,9 @@ public class ChoreManagerActivity extends AppCompatActivity {
         View addChoreView = li.inflate(R.layout.dialog_add_chore, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
         alertDialogBuilder.setView(addChoreView);
 
-        final EditText userInput = (EditText) addChoreView.findViewById(R.id.chore_name_input);
+        final TextInputEditText userInput = addChoreView.findViewById(R.id.chore_name_input);
 
         alertDialogBuilder
                 .setCancelable(true)
@@ -198,7 +184,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
                             for (String chore : chores) {
                                 if (choreName.equals(chore)) {
                                     Toast toast = Toast.makeText(ChoreManagerActivity.this, getString(R.string.err_chore_exists), Toast.LENGTH_SHORT);
-                                    TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                                    TextView text = toast.getView().findViewById(android.R.id.message);
                                     text.setGravity(Gravity.CENTER);
                                     toast.show();
                                     return;
@@ -213,7 +199,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
     }
 
     private void updateUI() {
-        adapter = new ChoreManagerAdapter(chores);
+        RecyclerView.Adapter adapter = new ChoreManagerAdapter(chores);
         choreView.setAdapter(adapter);
     }
 
@@ -229,7 +215,8 @@ public class ChoreManagerActivity extends AppCompatActivity {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                final String groupID = userGroupSnap.getValue(String.class);
+                groupList.child(groupID).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(final DataSnapshot groupMembersSnap) {
                         groupMembersSnap.getRef().orderByValue().equalTo("none").limitToFirst(1).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -247,7 +234,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
                                 Map<String, Object> childUpdates = new HashMap<>();
                                 childUpdates.put("/groups/" + userGroupSnap.getValue(String.class) + "/groupChores/" + choreName, choreValues);
                                 FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
-                                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").child(chorelessMember).setValue(choreName);
+                                groupList.child(groupID).child("groupMembers").child(chorelessMember).setValue(choreName);
                             }
 
                             @Override
@@ -275,27 +262,19 @@ public class ChoreManagerActivity extends AppCompatActivity {
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
-                groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").addListenerForSingleValueEvent(new ValueEventListener() {
+                groupList.child(userGroupSnap.getValue(String.class)).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(final DataSnapshot groupMembersSnap) {
-                        groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot groupChoresSnap) {
-                                for (DataSnapshot chore : groupChoresSnap.getChildren()) {
-                                    for (DataSnapshot member : groupMembersSnap.getChildren()) {
-                                        groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(chore.getKey()).child("boomNumber").setValue(0);
-                                        groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(chore.getKey()).child("lastBoom").setValue(0);
-                                        groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(chore.getKey()).child("gracePeriodEnd").setValue(0);
-                                        groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(chore.getKey()).child(member.getKey()).setValue(0);
-                                    }
-                                }
+                    public void onDataChange(DataSnapshot groupSnap) {
+                        Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
+                        for (DataSnapshot chore : groupChoresSnap) {
+                            Iterable<DataSnapshot> groupMembersSnap = groupSnap.child("groupMembers").getChildren();
+                            for (DataSnapshot member : groupMembersSnap) {
+                                groupSnap.getRef().child("groupChores").child(chore.getKey()).child("boomNumber").setValue(0);
+                                groupSnap.getRef().child("groupChores").child(chore.getKey()).child("lastBoom").setValue(0);
+                                groupSnap.getRef().child("groupChores").child(chore.getKey()).child("gracePeriodEnd").setValue(0);
+                                groupSnap.getRef().child("groupChores").child(chore.getKey()).child(member.getKey()).setValue(0);
                             }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.d(TAG + "Cancelled", databaseError.toString());
-                            }
-                        });
+                        }
                     }
 
                     @Override
@@ -320,7 +299,6 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
     class ChoreManagerAdapter extends RecyclerView.Adapter<ChoreManagerAdapter.ViewHolder> {
         private ArrayList<String> chores;
-        private Context context;
 
         ChoreManagerAdapter(ArrayList<String> chores) {
             this.chores = chores;
@@ -330,7 +308,6 @@ public class ChoreManagerActivity extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
             View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
-            this.context = viewGroup.getContext();
             return new ViewHolder(view);
         }
 
@@ -343,11 +320,12 @@ public class ChoreManagerActivity extends AppCompatActivity {
                     userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(final DataSnapshot userGroupSnap) {
-                            groupList.child(userGroupSnap.getValue(String.class)).child("groupMembers").orderByValue().equalTo(chores.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                            final String groupID = userGroupSnap.getValue(String.class);
+                            groupList.child(groupID).child("groupMembers").orderByValue().equalTo(chores.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot choreUserSnap) {
                                     choreUserSnap.getChildren().iterator().next().getRef().setValue("none");
-                                    groupList.child(userGroupSnap.getValue(String.class)).child("groupChores").child(chores.get(i)).removeValue();
+                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).removeValue();
                                     resetBooms();
                                 }
 

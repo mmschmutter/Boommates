@@ -23,6 +23,7 @@
         android:layout_height="65dp"
         android:layout_gravity="bottom|end"
         android:layout_margin="25dp"
+        android:clickable="true"
         android:tint="@color/colorText"
         tools:src="@drawable/plus_sign" />
 

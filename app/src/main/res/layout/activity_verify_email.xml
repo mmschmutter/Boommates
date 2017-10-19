@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="10dp">
+
+    <ImageView
+        android:id="@+id/email_icon"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:tint="@color/colorPrimaryDark"
+        tools:src="@drawable/mail" />
+
+    <TextView
+        android:id="@+id/verify_directions"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="50dp"
+        android:fontFamily="sans-serif"
+        android:textColor="@color/colorPrimaryDark"
+        android:textSize="20sp"
+        tools:text="Please check your email for verification" />
+
+    <Button
+        android:id="@+id/btn_check_verification"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_check_verification"
+        android:textColor="@color/colorText" />
+
+    <Button
+        android:id="@+id/btn_signup_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_signup_cancel"
+        android:textColor="@color/colorText" />
+
+    <ProgressBar
+        android:id="@+id/progress_signup_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp" />
+
+</LinearLayout>

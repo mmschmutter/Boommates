@@ -23,7 +23,6 @@ public class GroupChooserActivity extends AppCompatActivity {
 
     private static final String TAG = "GroupChooser";
 
-    private Button btnJoinGroup, btnCreateGroup;
     private ProgressBar progressBar;
     private DatabaseReference groupList, userList;
 
@@ -38,8 +37,8 @@ public class GroupChooserActivity extends AppCompatActivity {
 
         TextView directions = (TextView) findViewById(R.id.chooser_directions);
         directions.setText(R.string.chooser_directions);
-        btnJoinGroup = (Button) findViewById(R.id.btn_chooser_join);
-        btnCreateGroup = (Button) findViewById(R.id.btn_chooser_create);
+        Button btnJoinGroup = (Button) findViewById(R.id.btn_chooser_join);
+        Button btnCreateGroup = (Button) findViewById(R.id.btn_chooser_create);
         progressBar = (ProgressBar) findViewById(R.id.progress_create_apt);
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
@@ -67,8 +66,9 @@ public class GroupChooserActivity extends AppCompatActivity {
                         groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userEmail").setValue(user.getEmail());
                         groupList.child(groupID).child("groupMembers").child(user.getUid()).setValue("none");
                         userList.child(user.getUid()).child("userGroup").setValue(groupID);
+                        progressBar.setVisibility(View.INVISIBLE);
                         Toast toast = Toast.makeText(GroupChooserActivity.this, getString(R.string.created_group), Toast.LENGTH_LONG);
-                        TextView text = (TextView) toast.getView().findViewById(android.R.id.message);
+                        TextView text = toast.getView().findViewById(android.R.id.message);
                         text.setGravity(Gravity.CENTER);
                         toast.show();
                         Intent intent = new Intent(GroupChooserActivity.this, MainActivity.class);
@@ -89,6 +89,6 @@ public class GroupChooserActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        progressBar.setVisibility(View.GONE);
+        progressBar.setVisibility(View.INVISIBLE);
     }
 }
