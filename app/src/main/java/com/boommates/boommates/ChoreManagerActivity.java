@@ -50,7 +50,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.chore_manager_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        progressBar = (ProgressBar) findViewById(R.id.progress_manager);
+        progressBar = findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         Toast toast = Toast.makeText(ChoreManagerActivity.this, getText(R.string.edit_tasks_warning), Toast.LENGTH_LONG);
         TextView text = toast.getView().findViewById(android.R.id.message);
@@ -60,7 +60,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
         chores = new ArrayList<>();
         initChoreView();
         updateUI();
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         fab.setImageResource(R.drawable.plus_sign);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -204,7 +204,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
     }
 
     private void initChoreView() {
-        choreView = (RecyclerView) findViewById(R.id.chore_list_recycler_view);
+        choreView = findViewById(R.id.chore_list_recycler_view);
         choreView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         choreView.setLayoutManager(layoutManager);

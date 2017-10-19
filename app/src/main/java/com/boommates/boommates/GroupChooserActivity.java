@@ -35,11 +35,11 @@ public class GroupChooserActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.join_group_title));
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        TextView directions = (TextView) findViewById(R.id.chooser_directions);
+        TextView directions = findViewById(R.id.chooser_directions);
         directions.setText(R.string.chooser_directions);
-        Button btnJoinGroup = (Button) findViewById(R.id.btn_chooser_join);
-        Button btnCreateGroup = (Button) findViewById(R.id.btn_chooser_create);
-        progressBar = (ProgressBar) findViewById(R.id.progress_create_apt);
+        Button btnJoinGroup = findViewById(R.id.btn_chooser_join);
+        Button btnCreateGroup = findViewById(R.id.btn_chooser_create);
+        progressBar = findViewById(R.id.progress_create_apt);
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
 

@@ -39,19 +39,19 @@ public class SignupActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.signup_title));
         auth = FirebaseAuth.getInstance();
 
-        TextView directions = (TextView) findViewById(R.id.signup_directions);
+        TextView directions = findViewById(R.id.signup_directions);
         directions.setText(R.string.create_account_directions);
-        signupInputLayoutEmail = (TextInputLayout) findViewById(R.id.signup_input_layout_email);
-        signupInputLayoutPassword = (TextInputLayout) findViewById(R.id.signup_input_layout_password);
-        signupInputLayoutConfirmPassword = (TextInputLayout) findViewById(R.id.signup_input_layout_confirm_password);
-        progressBar = (ProgressBar) findViewById(R.id.progress_signup);
+        signupInputLayoutEmail = findViewById(R.id.signup_input_layout_email);
+        signupInputLayoutPassword = findViewById(R.id.signup_input_layout_password);
+        signupInputLayoutConfirmPassword = findViewById(R.id.signup_input_layout_confirm_password);
+        progressBar = findViewById(R.id.progress_signup);
 
-        signupInputEmail = (EditText) findViewById(R.id.signup_input_email);
-        signupInputPassword = (EditText) findViewById(R.id.signup_input_password);
-        signupInputConfirmPassword = (EditText) findViewById(R.id.signup_input_confirm_password);
+        signupInputEmail = findViewById(R.id.signup_input_email);
+        signupInputPassword = findViewById(R.id.signup_input_password);
+        signupInputConfirmPassword = findViewById(R.id.signup_input_confirm_password);
 
-        btnSignUp = (Button) findViewById(R.id.btn_signup);
-        Button btnLinkToLogIn = (Button) findViewById(R.id.btn_link_login);
+        btnSignUp = findViewById(R.id.btn_signup);
+        Button btnLinkToLogIn = findViewById(R.id.btn_link_login);
 
 
         btnSignUp.setOnClickListener(new View.OnClickListener() {

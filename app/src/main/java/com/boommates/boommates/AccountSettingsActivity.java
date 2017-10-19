@@ -40,11 +40,11 @@ public class AccountSettingsActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
-        Button btnLogout = (Button) findViewById(R.id.btn_account_logout);
-        Button btnLeaveGroup = (Button) findViewById(R.id.btn_account_leave);
-        Button btnChangePassword = (Button) findViewById(R.id.btn_account_password);
-        Button btnDeleteAccount = (Button) findViewById(R.id.btn_account_delete);
-        progressBar = (ProgressBar) findViewById(R.id.progress_settings);
+        Button btnLogout = findViewById(R.id.btn_account_logout);
+        Button btnLeaveGroup = findViewById(R.id.btn_account_leave);
+        Button btnChangePassword = findViewById(R.id.btn_account_password);
+        Button btnDeleteAccount = findViewById(R.id.btn_account_delete);
+        progressBar = findViewById(R.id.progress_settings);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

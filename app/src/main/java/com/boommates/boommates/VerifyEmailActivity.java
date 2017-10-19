@@ -37,16 +37,16 @@ public class VerifyEmailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.verify_email_title));
         user = FirebaseAuth.getInstance().getCurrentUser();
 
-        ImageView logo = (ImageView) findViewById(R.id.email_icon);
+        ImageView logo = findViewById(R.id.email_icon);
         logo.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.mail));
 
-        TextView directions = (TextView) findViewById(R.id.verify_directions);
+        TextView directions = findViewById(R.id.verify_directions);
         directions.setText(R.string.verify_directions);
 
-        progressBar = (ProgressBar) findViewById(R.id.progress_signup_cancel);
+        progressBar = findViewById(R.id.progress_signup_cancel);
 
-        Button btnCheckVerification = (Button) findViewById(R.id.btn_check_verification);
-        Button btnCancelSignup = (Button) findViewById(R.id.btn_signup_cancel);
+        Button btnCheckVerification = findViewById(R.id.btn_check_verification);
+        Button btnCancelSignup = findViewById(R.id.btn_signup_cancel);
 
         btnCheckVerification.setOnClickListener(new View.OnClickListener() {
             @Override

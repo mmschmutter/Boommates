@@ -40,19 +40,19 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.login_title));
         auth = FirebaseAuth.getInstance();
 
-        ImageView logo = (ImageView) findViewById(R.id.login_logo);
+        ImageView logo = findViewById(R.id.login_logo);
         logo.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.ic_launcher));
 
-        loginInputLayoutEmail = (TextInputLayout) findViewById(R.id.login_input_layout_email);
-        loginInputLayoutPassword = (TextInputLayout) findViewById(R.id.login_input_layout_password);
-        progressBar = (ProgressBar) findViewById(R.id.progress_login);
+        loginInputLayoutEmail = findViewById(R.id.login_input_layout_email);
+        loginInputLayoutPassword = findViewById(R.id.login_input_layout_password);
+        progressBar = findViewById(R.id.progress_login);
 
-        loginInputEmail = (EditText) findViewById(R.id.login_input_email);
-        loginInputPassword = (EditText) findViewById(R.id.login_input_password);
+        loginInputEmail = findViewById(R.id.login_input_email);
+        loginInputPassword = findViewById(R.id.login_input_password);
 
-        btnLogin = (Button) findViewById(R.id.btn_login);
-        Button btnLinkToSignUp = (Button) findViewById(R.id.btn_link_signup);
-        Button btnPasswordReset = (Button) findViewById(R.id.btn_forgot_password);
+        btnLogin = findViewById(R.id.btn_login);
+        Button btnLinkToSignUp = findViewById(R.id.btn_link_signup);
+        Button btnPasswordReset = findViewById(R.id.btn_forgot_password);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

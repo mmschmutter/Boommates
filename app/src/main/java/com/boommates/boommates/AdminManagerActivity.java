@@ -49,7 +49,7 @@ public class AdminManagerActivity extends AppCompatActivity {
         getSupportActionBar().setTitle(getString(R.string.admin_manager_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-        progressBar = (ProgressBar) findViewById(R.id.progress_manager);
+        progressBar = findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
         Bundle extras = getIntent().getExtras();
@@ -130,7 +130,7 @@ public class AdminManagerActivity extends AppCompatActivity {
     }
 
     private void initMemberView() {
-        memberView = (RecyclerView) findViewById(R.id.member_recycler_view);
+        memberView = findViewById(R.id.member_recycler_view);
         memberView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         memberView.setLayoutManager(layoutManager);

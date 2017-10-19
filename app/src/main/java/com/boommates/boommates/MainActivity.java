@@ -66,9 +66,9 @@ public class MainActivity extends AppCompatActivity {
             finish();
         } else {
             setContentView(R.layout.activity_main);
-            topProgressBar = (ProgressBar) findViewById(R.id.progress_main_top);
+            topProgressBar = findViewById(R.id.progress_main_top);
             topProgressBar.setVisibility(View.VISIBLE);
-            bottomProgressBar = (ProgressBar) findViewById(R.id.progress_main_bottom);
+            bottomProgressBar = findViewById(R.id.progress_main_bottom);
             bottomProgressBar.setVisibility(View.VISIBLE);
             databaseTime = FirebaseDatabase.getInstance().getReference("currentTime");
             groupList = FirebaseDatabase.getInstance().getReference("groups");

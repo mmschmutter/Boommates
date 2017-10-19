@@ -40,12 +40,12 @@ public class GroupJoinActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
-        TextView directions = (TextView) findViewById(R.id.join_directions);
+        TextView directions = findViewById(R.id.join_directions);
         directions.setText(R.string.join_directions);
-        aptInputLayout = (TextInputLayout) findViewById(R.id.apt_input);
-        progressBar = (ProgressBar) findViewById(R.id.progress_join_apt);
-        aptInputID = (TextInputEditText) findViewById(R.id.input_apt_id);
-        btnJoinApt = (Button) findViewById(R.id.btn_join_apt);
+        aptInputLayout = findViewById(R.id.apt_input);
+        progressBar = findViewById(R.id.progress_join_apt);
+        aptInputID = findViewById(R.id.input_apt_id);
+        btnJoinApt = findViewById(R.id.btn_join_apt);
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
 
