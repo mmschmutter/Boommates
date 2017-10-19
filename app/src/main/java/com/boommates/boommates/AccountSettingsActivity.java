@@ -2,6 +2,7 @@ package com.boommates.boommates;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
@@ -11,6 +12,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -21,59 +24,119 @@ import com.google.firebase.database.ValueEventListener;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
-    private static final String TAG = "GroupChooser";
+    private static final String TAG = "AccSettAct";
 
     private ProgressBar progressBar;
     private DatabaseReference groupList, userList;
-
     private FirebaseUser user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_group_chooser);
-        getSupportActionBar().setTitle(getString(R.string.join_group_title));
+        setContentView(R.layout.activity_account_settings);
+        getSupportActionBar().setTitle(getString(R.string.account_settings_title));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
         user = FirebaseAuth.getInstance().getCurrentUser();
-
-        TextView directions = (TextView) findViewById(R.id.chooser_directions);
-        directions.setText(R.string.chooser_directions);
-        Button btnJoinGroup = (Button) findViewById(R.id.btn_chooser_join);
-        Button btnCreateGroup = (Button) findViewById(R.id.btn_chooser_create);
-        progressBar = (ProgressBar) findViewById(R.id.progress_create_apt);
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
+        Button btnLogout = (Button) findViewById(R.id.btn_account_logout);
+        Button btnLeaveGroup = (Button) findViewById(R.id.btn_account_leave);
+        Button btnChangePassword = (Button) findViewById(R.id.btn_account_password);
+        Button btnDeleteAccount = (Button) findViewById(R.id.btn_account_delete);
+        progressBar = (ProgressBar) findViewById(R.id.progress_settings);
 
-        btnJoinGroup.setOnClickListener(new View.OnClickListener() {
+        btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(AccountSettingsActivity.this, GroupJoinActivity.class));
+                logout();
             }
         });
 
-        btnCreateGroup.setOnClickListener(new View.OnClickListener() {
+        btnLeaveGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                groupList.orderByChild("groupAdmin").equalTo(user.getEmail()).addListenerForSingleValueEvent(new ValueEventListener() {
+                leaveGroup();
+            }
+        });
+
+        btnChangePassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changePassword();
+            }
+        });
+
+        btnDeleteAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                deleteAccount();
+            }
+        });
+    }
+
+    private void logout(){
+        progressBar.setVisibility(View.VISIBLE);
+        userList.child(user.getUid()).child("userToken").setValue("none");
+        FirebaseAuth.getInstance().signOut();
+        progressBar.setVisibility(View.INVISIBLE);
+        Intent intent = new Intent(AccountSettingsActivity.this, LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void leaveGroup(){
+        progressBar.setVisibility(View.VISIBLE);
+        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userGroupSnap) {
+                final String groupID = userGroupSnap.getValue(String.class);
+                groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
-                    public void onDataChange(DataSnapshot groupAdminsSnap) {
-                        if (groupAdminsSnap.hasChildren()) {
-                            groupAdminsSnap.getChildren().iterator().next().getRef().removeValue();
+                    public void onDataChange(DataSnapshot groupSnap) {
+                        String admin = groupSnap.child("groupAdmin").getValue(String.class);
+                        DataSnapshot groupMembersSnap = groupSnap.child("groupMembers");
+                        if (admin.equals(user.getEmail())) {
+                            if (groupMembersSnap.getChildrenCount() == 1) {
+                                groupList.child(groupID).removeValue();
+                                userList.child(user.getUid()).child("userGroup").setValue("none");
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Toast toast = Toast.makeText(AccountSettingsActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
+                                TextView text = toast.getView().findViewById(android.R.id.message);
+                                text.setGravity(Gravity.CENTER);
+                                toast.show();
+                                Intent intent = new Intent(AccountSettingsActivity.this, GroupChooserActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Intent intent = new Intent(AccountSettingsActivity.this, AdminManagerActivity.class);
+                                intent.putExtra("delete", false);
+                                startActivity(intent);
+                            }
+                        } else {
+                            String userChore = groupMembersSnap.child(user.getUid()).getValue(String.class);
+                            if (!userChore.equals("none")) {
+                                groupList.child(groupID).child("groupChores").child(userChore).removeValue();
+                            }
+                            groupMembersSnap.getRef().child(user.getUid()).removeValue();
+                            userList.child(user.getUid()).child("userGroup").setValue("none");
+                            Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
+                            for (DataSnapshot chore : groupChoresSnap) {
+                                chore.child(user.getUid()).getRef().removeValue();
+                            }
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(AccountSettingsActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                            Intent intent = new Intent(AccountSettingsActivity.this, GroupChooserActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
                         }
-                        String groupID = groupList.push().getKey();
-                        groupList.child(groupID).child("groupAdmin").setValue(user.getEmail());
-                        groupList.child(groupID).child("groupRotation").setValue(0);
-                        groupList.child(groupID).child("groupMembers").child(user.getUid()).child("userEmail").setValue(user.getEmail());
-                        groupList.child(groupID).child("groupMembers").child(user.getUid()).setValue("none");
-                        userList.child(user.getUid()).child("userGroup").setValue(groupID);
-                        Toast toast = Toast.makeText(AccountSettingsActivity.this, getString(R.string.created_group), Toast.LENGTH_LONG);
-                        TextView text = toast.getView().findViewById(android.R.id.message);
-                        text.setGravity(Gravity.CENTER);
-                        toast.show();
-                        Intent intent = new Intent(AccountSettingsActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
                     }
 
                     @Override
@@ -82,12 +145,120 @@ public class AccountSettingsActivity extends AppCompatActivity {
                     }
                 });
             }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG + "Cancelled", databaseError.toString());
+            }
         });
+    }
+
+    private void changePassword(){
+        progressBar.setVisibility(View.VISIBLE);
+        FirebaseAuth.getInstance().sendPasswordResetEmail(user.getEmail())
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(AccountSettingsActivity.this, getString(R.string.password_change_success), Toast.LENGTH_LONG);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                            Log.d(TAG, "Email sent.");
+                        } else {
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(AccountSettingsActivity.this, getString(R.string.password_change_fail), Toast.LENGTH_LONG);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                        }
+                    }
+                });
+    }
+
+    private void deleteAccount(){
+        progressBar.setVisibility(View.VISIBLE);
+        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userGroupSnap) {
+                final String groupID = userGroupSnap.getValue(String.class);
+                groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot groupSnap) {
+                        String admin = groupSnap.child("groupAdmin").getValue(String.class);
+                        DataSnapshot groupMembersSnap = groupSnap.child("groupMembers");
+                        if (admin.equals(user.getEmail())) {
+                            if (groupMembersSnap.getChildrenCount() == 1) {
+                                groupList.child(groupID).removeValue();
+                                userList.child(user.getUid()).child("userGroup").setValue("none");
+                                deleteUser();
+                            } else {
+                                progressBar.setVisibility(View.INVISIBLE);
+                                Intent intent = new Intent(AccountSettingsActivity.this, AdminManagerActivity.class);
+                                intent.putExtra("delete", true);
+                                startActivity(intent);
+                            }
+                        } else {
+                            String userChore = groupMembersSnap.child(user.getUid()).getValue(String.class);
+                            if (!userChore.equals("none")) {
+                                groupList.child(groupID).child("groupChores").child(userChore).removeValue();
+                            }
+                            groupMembersSnap.getRef().child(user.getUid()).removeValue();
+                            userList.child(user.getUid()).child("userGroup").setValue("none");
+                            Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
+                            for (DataSnapshot chore : groupChoresSnap) {
+                                chore.child(user.getUid()).getRef().removeValue();
+                            }
+                            deleteUser();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG + "Cancelled", databaseError.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG + "Cancelled", databaseError.toString());
+            }
+        });
+    }
+
+    private void deleteUser(){
+        userList.child(user.getUid()).removeValue();
+        user.delete()
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User account deleted.");
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(AccountSettingsActivity.this, getText(R.string.account_deleted), Toast.LENGTH_LONG);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                            Intent intent = new Intent(AccountSettingsActivity.this, LoginActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }
+                });
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         progressBar.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

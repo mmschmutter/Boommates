@@ -200,7 +200,25 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private static boolean isPasswordValid(String password) {
-        return (password.length() >= 6);
+        boolean lengthFlag = false;
+        boolean numberFlag = false;
+        boolean upperCaseFlag = false;
+        boolean lowerCaseFlag = false;
+        if (password.length() > 5) {
+            lengthFlag = true;
+        }
+        char c;
+        for (int i = 0; i < password.length(); i++) {
+            c = password.charAt(i);
+            if (Character.isDigit(c)) {
+                numberFlag = true;
+            } else if (Character.isUpperCase(c)) {
+                upperCaseFlag = true;
+            } else if (Character.isLowerCase(c)) {
+                lowerCaseFlag = true;
+            }
+        }
+        return lengthFlag && numberFlag && upperCaseFlag && lowerCaseFlag;
     }
 
     private void requestFocus(View view) {

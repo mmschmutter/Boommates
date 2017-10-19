@@ -172,16 +172,16 @@ public class MainActivity extends AppCompatActivity {
                                     if (boomNumber == 0) {
                                         setNoXs();
                                     } else if (boomNumber == 1) {
-                                        setOneX(remainingTime, yourChoreSnap, groupID);
+                                        setOneX(remainingTime, groupID);
                                     } else if (boomNumber == 2) {
                                         long gracePeriodEndTime = groupSnap.child("groupChores").child(yourChoreName).child("gracePeriodEnd").getValue(Long.class);
                                         if (currentTime > gracePeriodEndTime) {
-                                            setTwoXs(remainingTime, yourChoreSnap, groupID);
+                                            setTwoXs(remainingTime, groupID);
                                         } else {
-                                            setTwoXsGrace(gracePeriodEndTime - currentTime, yourChoreSnap, groupID);
+                                            setTwoXsGrace(gracePeriodEndTime - currentTime, groupID);
                                         }
                                     } else if (boomNumber == 3) {
-                                        setThreeXs(remainingTime, yourChoreSnap, groupID);
+                                        setThreeXs(remainingTime, groupID);
                                     }
                                     setXToasts();
                                     showDashboard();
@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         timerText.setText(getText(R.string.no_booms));
     }
 
-    private void setOneX(long remainingTime, final DataSnapshot chore, final String groupID) {
+    private void setOneX(long remainingTime, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -241,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void setTwoXsGrace(long remainingTime, final DataSnapshot chore, final String groupID) {
+    private void setTwoXsGrace(long remainingTime, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -262,12 +262,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onFinish() {
-                setTwoXs(86400000, chore, groupID);
+                setTwoXs(86400000, groupID);
             }
         }.start();
     }
 
-    private void setTwoXs(long remainingTime, final DataSnapshot chore, final String groupID) {
+    private void setTwoXs(long remainingTime, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x_empty));
@@ -293,7 +293,7 @@ public class MainActivity extends AppCompatActivity {
         }.start();
     }
 
-    private void setThreeXs(long remainingTime, final DataSnapshot chore, final String groupID) {
+    private void setThreeXs(long remainingTime, final String groupID) {
         firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
         thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
@@ -533,8 +533,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         if (user != null) {
-            getMenuInflater().inflate(R.menu.menu_main, menu);
             setAdminSettings(menu);
+            getMenuInflater().inflate(R.menu.menu_main, menu);
         }
         return true;
     }
@@ -547,8 +547,9 @@ public class MainActivity extends AppCompatActivity {
                     groupList.child(userGroupSnap.getValue(String.class)).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot adminSnap) {
-                            if (adminSnap.exists() && !adminSnap.getValue(String.class).equals(user.getEmail())) {
-                                menu.setGroupVisible(R.id.admin_menu_group, false);
+                            if (adminSnap.exists() && adminSnap.getValue(String.class).equals(user.getEmail())) {
+                                menu.setGroupVisible(R.id.admin_menu_group, true);
+                                menu.getItem(2).setShowAsAction(MenuItem.SHOW_AS_ACTION_NEVER);
                             }
                         }
 
@@ -577,79 +578,10 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, MemberManagerActivity.class));
                 break;
             case R.id.action_account_settings:
-                leaveGroup();
+                startActivity(new Intent(MainActivity.this, AccountSettingsActivity.class));
                 break;
-            /*case R.id.action_logout:
-                userList.child(user.getUid()).child("userToken").setValue("none");
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-                break;*/
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    void leaveGroup() {
-        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(final DataSnapshot userGroupSnap) {
-                final String userGroup = userGroupSnap.getValue(String.class);
-                groupList.child(userGroup).addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot groupSnap) {
-                        String admin = groupSnap.child("groupAdmin").getValue(String.class);
-                        DataSnapshot groupMembersSnap = groupSnap.child("groupMembers");
-                        if (admin.equals(user.getEmail())) {
-                            if (groupMembersSnap.getChildrenCount() == 1) {
-                                groupList.child(userGroup).removeValue();
-                                userList.child(user.getUid()).child("userGroup").setValue("none");
-                                Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
-                                TextView text = toast.getView().findViewById(android.R.id.message);
-                                text.setGravity(Gravity.CENTER);
-                                toast.show();
-                                Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                startActivity(new Intent(MainActivity.this, AdminManagerActivity.class));
-                            }
-                        } else {
-                            String userChore = groupMembersSnap.child(user.getUid()).getValue(String.class);
-                            if (!userChore.equals("none")) {
-                                groupList.child(userGroup).child("groupChores").child(userChore).removeValue();
-                            }
-                            groupMembersSnap.getRef().child(user.getUid()).removeValue();
-                            userList.child(user.getUid()).child("userGroup").setValue("none");
-                            Iterable<DataSnapshot> groupChoresSnap = groupSnap.child("groupChores").getChildren();
-                            for (DataSnapshot chore : groupChoresSnap) {
-                                chore.child(user.getUid()).getRef().removeValue();
-                            }
-                            Toast toast = Toast.makeText(MainActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
-                            TextView text = toast.getView().findViewById(android.R.id.message);
-                            text.setGravity(Gravity.CENTER);
-                            toast.show();
-                            Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        Log.d(TAG + "Cancelled", databaseError.toString());
-                    }
-                });
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.d(TAG + "Cancelled", databaseError.toString());
-            }
-        });
     }
 
     class ChoreBoomAdapter extends RecyclerView.Adapter<ChoreBoomAdapter.ViewHolder> {

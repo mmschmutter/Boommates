@@ -14,11 +14,10 @@
     <string name="hint_password">Password</string>
     <string name="btn_login">LOG IN</string>
     <string name="btn_link_to_login">Already registered? Log in!</string>
-    <string name="btn_logout">LOG OUT</string>
     <string name="btn_sign_up">SIGN UP</string>
     <string name="err_msg_email">Please enter a valid email</string>
     <string name="err_msg_required">Required field</string>
-    <string name="err_msg_password">Please enter a valid password (6 character minimum)</string>
+    <string name="err_msg_password">Six characters including uppercase, lowercase, and number required</string>
     <string name="btn_link_to_signup">Don\'t have an account? Sign up!</string>
     <string name="successful_registration">Registration successful!</string>
     <string name="hint_confirm_password">Confirm Password</string>
@@ -32,12 +31,22 @@
     <string name="join_directions">Enter email of roommate who created the group</string>
     <string name="create_account_directions">Create a new account</string>
     <string name="err_msg_group_id">No group associated with that email</string>
+    <string name="account_not_verified">Account still unverified\nPlease click the verification link in your email, wait a moment, and try again</string>
+    <string name="signup_cancel_fail">Cannot cancel sign up at the moment</string>
+    <string name="signup_cancel_success">Sign up cancelled</string>
+    <string name="password_reset_success">Password reset link sent to email</string>
+    <string name="password_reset_fail">No account exists for that email</string>
+    <string name="verify_directions">Please check your email for verification</string>
+    <string name="account_verified">Account verified!</string>
+    <string name="btn_check_verification">I DID!</string>
+    <string name="btn_signup_cancel">CANCEL SIGN UP</string>
+    <string name="btn_forgot_password">Reset Your Password</string>
 
     <!-- menu strings -->
     <string name="menu_edit_tasks">Edit Tasks</string>
     <string name="menu_remove_members">Remove Members</string>
-    <string name="menu_leave_group">Leave Group</string>
-    <string name="menu_logout">Log Out</string>
+    <string name="menu_account_settings">Account Settings</string>
+
 
     <!-- X explanation strings -->
     <string name="first_x_explanation">First BOOM\nThis BOOM will disappear if you do not receive another BOOM within 24 hours</string>
@@ -67,17 +76,10 @@
     <string name="btn_account_password">CHANGE PASSWORD</string>
     <string name="btn_account_leave">LEAVE GROUP</string>
     <string name="btn_account_delete">DELETE ACCOUNT</string>
-    <string name="btn_signup_cancel">CANCEL SIGN UP</string>
-    <string name="btn_forgot_password">Reset Your Password</string>
-    <string name="password_reset_success">Password reset link sent to email</string>
-    <string name="password_reset_fail">No account exists for that email</string>
     <string name="verify_email_title">Verify Email</string>
-    <string name="verify_directions">Please check your email for verification</string>
-    <string name="signup_cancel_fail">Cannot cancel sign up at the moment</string>
-    <string name="signup_cancel_success">Sign up cancelled</string>
-    <string name="account_verified">Account verified!</string>
-    <string name="btn_check_verification">I DID!</string>
-    <string name="account_not_verified">Account still unverified\nPlease click the verification link in your email, wait a moment, and try again</string>
+    <string name="account_settings_title">Account Settings</string>
     <string name="btn_account_logout">LOG OUT</string>
-    <string name="menu_account_settings">Account Settings</string>
+    <string name="account_deleted">Account deleted</string>
+    <string name="password_change_success">Password change link sent to email</string>
+    <string name="password_change_fail">Cannot send password change link at the moment</string>
 </resources>

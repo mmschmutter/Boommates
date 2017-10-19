@@ -2,6 +2,7 @@ package com.boommates.boommates;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +16,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -37,6 +40,7 @@ public class AdminManagerActivity extends AppCompatActivity {
     private FirebaseUser user;
     private ArrayList<String> members;
     private ProgressBar progressBar;
+    private boolean delete;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +52,10 @@ public class AdminManagerActivity extends AppCompatActivity {
         progressBar = (ProgressBar) findViewById(R.id.progress_manager);
         progressBar.setVisibility(View.VISIBLE);
         user = FirebaseAuth.getInstance().getCurrentUser();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            delete = extras.getBoolean("delete");
+        }
         members = new ArrayList<>();
         initMemberView();
         updateUI();
@@ -174,14 +182,18 @@ public class AdminManagerActivity extends AppCompatActivity {
                                     for (DataSnapshot chore : groupChoresSnap) {
                                         chore.child(user.getUid()).getRef().removeValue();
                                     }
-                                    Toast toast = Toast.makeText(AdminManagerActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
-                                    TextView text = toast.getView().findViewById(android.R.id.message);
-                                    text.setGravity(Gravity.CENTER);
-                                    toast.show();
-                                    Intent intent = new Intent(AdminManagerActivity.this, GroupChooserActivity.class);
-                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                    startActivity(intent);
-                                    finish();
+                                    if (delete) {
+                                        deleteUser();
+                                    } else {
+                                        Toast toast = Toast.makeText(AdminManagerActivity.this, getText(R.string.left_group), Toast.LENGTH_LONG);
+                                        TextView text = toast.getView().findViewById(android.R.id.message);
+                                        text.setGravity(Gravity.CENTER);
+                                        toast.show();
+                                        Intent intent = new Intent(AdminManagerActivity.this, GroupChooserActivity.class);
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(intent);
+                                        finish();
+                                    }
                                 }
 
                                 @Override
@@ -198,6 +210,27 @@ public class AdminManagerActivity extends AppCompatActivity {
                     });
                 }
             });
+        }
+
+        private void deleteUser() {
+            userList.child(user.getUid()).removeValue();
+            user.delete()
+                    .addOnCompleteListener(new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            if (task.isSuccessful()) {
+                                Log.d(TAG, "User account deleted.");
+                                Toast toast = Toast.makeText(AdminManagerActivity.this, getText(R.string.account_deleted), Toast.LENGTH_LONG);
+                                TextView text = toast.getView().findViewById(android.R.id.message);
+                                text.setGravity(Gravity.CENTER);
+                                toast.show();
+                                Intent intent = new Intent(AdminManagerActivity.this, LoginActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            }
+                        }
+                    });
         }
 
         @Override
