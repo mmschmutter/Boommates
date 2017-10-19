@@ -51,8 +51,6 @@ public class VerifyEmailActivity extends AppCompatActivity {
         btnCheckVerification.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                progressBar.setVisibility(View.VISIBLE);
-                user.reload();
                 checkVerification();
             }
         });
@@ -65,6 +63,8 @@ public class VerifyEmailActivity extends AppCompatActivity {
     }
 
     private void checkVerification() {
+        progressBar.setVisibility(View.VISIBLE);
+        user.reload();
         if (user.isEmailVerified()) {
             progressBar.setVisibility(View.INVISIBLE);
             Toast toast = Toast.makeText(VerifyEmailActivity.this, getString(R.string.account_verified), Toast.LENGTH_SHORT);
