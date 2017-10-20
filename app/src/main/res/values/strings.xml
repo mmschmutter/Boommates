@@ -89,5 +89,5 @@
     <string name="err_unavailable_user">User is already a member of a different group</string>
     <string name="err_duplicate_user">User is already a member of this group</string>
     <string name="member_added">added to group</string>
-    <string name="join_group_directions">If one of your roommates already made a group, ask them to add you.\n\nOR</string>
+    <string name="join_group_directions">If one of your roommates already made a group, ask them to add you\n\nOR</string>
 </resources>
