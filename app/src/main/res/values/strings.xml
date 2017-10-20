@@ -43,9 +43,9 @@
     <string name="btn_forgot_password">Reset Your Password</string>
 
     <!-- menu strings -->
-    <string name="menu_edit_tasks">Edit Tasks</string>
-    <string name="menu_remove_members">Remove Members</string>
-    <string name="menu_account_settings">Account Settings</string>
+    <string name="menu_edit_tasks">Edit tasks</string>
+    <string name="menu_remove_members">Manage members</string>
+    <string name="menu_account_settings">Account settings</string>
 
 
     <!-- X explanation strings -->
@@ -82,4 +82,12 @@
     <string name="account_deleted">Account deleted</string>
     <string name="password_change_success">Password change link sent to email</string>
     <string name="password_change_fail">Cannot send password change link at the moment</string>
+    <string name="hint_member_email">Roommate\'s Email</string>
+    <string name="hint_chore_name">Task Name</string>
+    <string name="err_invalid_email">Please enter a valid email</string>
+    <string name="err_invalid_user">No user with that email exists</string>
+    <string name="err_unavailable_user">User is already a member of a different group</string>
+    <string name="err_duplicate_user">User is already a member of this group</string>
+    <string name="member_added">added to group</string>
+    <string name="join_group_directions">If one of your roommates already made a group, ask them to add you.\n\nOR</string>
 </resources>

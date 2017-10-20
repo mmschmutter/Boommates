@@ -52,21 +52,18 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 logout();
             }
         });
-
         btnLeaveGroup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 leaveGroup();
             }
         });
-
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 changePassword();
             }
         });
-
         btnDeleteAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -106,7 +103,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                                 TextView text = toast.getView().findViewById(android.R.id.message);
                                 text.setGravity(Gravity.CENTER);
                                 toast.show();
-                                Intent intent = new Intent(AccountSettingsActivity.this, GroupChooserActivity.class);
+                                Intent intent = new Intent(AccountSettingsActivity.this, JoinGroupActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 startActivity(intent);
                                 finish();
@@ -132,7 +129,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                             TextView text = toast.getView().findViewById(android.R.id.message);
                             text.setGravity(Gravity.CENTER);
                             toast.show();
-                            Intent intent = new Intent(AccountSettingsActivity.this, GroupChooserActivity.class);
+                            Intent intent = new Intent(AccountSettingsActivity.this, JoinGroupActivity.class);
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                             startActivity(intent);
                             finish();

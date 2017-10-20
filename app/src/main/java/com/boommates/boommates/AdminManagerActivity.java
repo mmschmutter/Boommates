@@ -45,7 +45,7 @@ public class AdminManagerActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_member_manager);
+        setContentView(R.layout.activity_list_selector);
         getSupportActionBar().setTitle(getString(R.string.admin_manager_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -130,7 +130,7 @@ public class AdminManagerActivity extends AppCompatActivity {
     }
 
     private void initMemberView() {
-        memberView = findViewById(R.id.member_recycler_view);
+        memberView = findViewById(R.id.list_selector_recycler_view);
         memberView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         memberView.setLayoutManager(layoutManager);
@@ -189,7 +189,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                                         TextView text = toast.getView().findViewById(android.R.id.message);
                                         text.setGravity(Gravity.CENTER);
                                         toast.show();
-                                        Intent intent = new Intent(AdminManagerActivity.this, GroupChooserActivity.class);
+                                        Intent intent = new Intent(AdminManagerActivity.this, JoinGroupActivity.class);
                                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(intent);
                                         finish();

@@ -3,6 +3,15 @@
 
     <item
         is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/d75e1c5e8c327835b165360690a208560d94cd65/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="c2cadea4d8a1a5b5c4e5f0dc99a99a43774f5e6e">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_325e16ae84750ad2e138a9ccc138c90272081e3a.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="/Users/mordechai/.android/build-cache/ed5b95a9c1c861887e643d5f1a579223d6107341/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
@@ -12,156 +21,111 @@
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/b6266e989c0230c12b47d8f020a2b6b4d19cb611/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/9bea098e419af8973801804dd628c2024bde75b6/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="c4f45092eee6cdf1a5dbd597b2b6819be652ce2e">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_08bf8a81c8febfa933b5863212312645d0668b18.jar" />
+        revision="26.0.2"
+        sha1="8040d53ecd4bd895360eafdc25e1c1cc9479e6aa">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_027e2b2019245eb7e49422165bcbd769e2a7d599.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/14b685d4d9ab63efd8b47dbfcffae6989a7eacac/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/8c07597cc1d7d8dd69dedb07a27ad8acc6375cb0/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="e176fd06c2ad5b50a2f5cb4de6000a83a7cb48f5">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_1d8a5aa6c160b4c6b4476e5b473a7f59a80ea3e3.jar" />
+        revision="26.0.2"
+        sha1="bed98ea7af8c5c4202820875e856dd3eb296e22d">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_68c75af1a3e3822b60dd09930d852b7d044ae487.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/f081f687b3fba9c90ce0e86a062b64e93310a31a/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/4257fa59bf44c4184344077c8354d764b077baa5/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="86baa7d1051901fc1b8e7f596732f71f32175bde">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_95d672f4a86bf8bd0e58afdc91def86f14f7295f.jar" />
+        revision="26.0.2"
+        sha1="233f60a165ae622c8b36731502ebbda0f65e1930">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_23f3c1ae2c4cca7d772b36d280b798b672c3325d.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/d4a8362c25d3a425d812d7dbd51b6bf39785c906/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/e2cacd09259315a13d1ac658d0a12e8ab261ee97/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="2c1d9fbe7d2f686b3dcdbc3f63a983a211401ca3">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_ca5cc7d1290b375ca437d7020931201015f7d2aa.jar" />
+        revision="26.0.2"
+        sha1="b62fdc4cfef174c1e456014195c83fa7de7dc041">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_4c468ddedf93dfeeb0a9bee31bdc6ad6a7835871.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/6fd794b04d400a1d8e78e98aa209056453fe89d6/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/644d00f93284dd75b30a101abbd026ebd298f499/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="4262bcd49b19d558c241bf8c68470fcc6fa1ac84">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_db442d4700b50e39f60a130ce58aa5fb3121917a.jar" />
+        revision="26.0.2"
+        sha1="40392f30a601db5675cdf18192aab013d6fee6ec">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_ee6b7800dee2104c75a6a00e5dc3fc6b86cf0270.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/96137aa643041039ea1e306eed4b92412c52c78d/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/6a8603ebd4f5b5b2884010df2652967b5e9d30e3/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="952944218ecedea1554a513dec0c14d570642843">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_6fe205624a8401614dbe7ffdb3b7f11bb745d1cb.jar" />
+        revision="26.0.2"
+        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_e7664b67a6a2dacaa9ee18a24c5da38bb5278756.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/9fa8ccd468a123d6dfa10565f1bfd6e5f85f4e87/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/c20d05651572ec94d1f0edb589f66d72b21c4273/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="8df0e365e40beb151bc42dee20817721a6cab7b0">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_750770af1affa78ff6f7f816b46b607c2415da22.jar" />
+        revision="26.0.2"
+        sha1="73c80b05a390e8319d1ef7a236739cd610c8f774">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_ea1b5f6fccb78b453360627d87d6af9c37bc32b9.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/f3c4f63170dc5b2f4a82cfcbe9c2dc8e1cb06342/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/8d3772e0135b428da2309c7f649c071f971cb6dd/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="47471eb19df288158b00b8d9cfa41bce7373f5cc">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_7a714fac5c737cebd478a5b84559051b45091d4a.jar" />
-    </item>
-    <item
-        is-multidex="true"
-        jar="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
-        jumboMode="true"
-        optimize="true"
-        revision="26.0.1"
-        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_cad0b8cd6247aecb3764623bcc0fdd5f56d25bde/classes.dex" />
+        revision="26.0.2"
+        sha1="52339832d252da4328c5ffcacbc205268346362a">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_c18a5ba8c29190d7ecddcf6b759d0062b3d76917.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/f8a726fd537f4308398d62511f8fb7aa18510d79/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/1cb07a1118f79ca8ba034a26721504a19ac9776f/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="88246166d5afb106f532f6e6deae683c66b42c89">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_da1dd809c60928b0e251a6a4721008ae4cd0a242.jar" />
+        revision="26.0.2"
+        sha1="a37fc31c5ceeaa4532a37358add1b189d8db4af1">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_69768008e7df79009ef03cc042c02664111cfb38.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/8ec38671399fe65ce62af8723c0c16f30cc58b44/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/52be48cc5e6af20b4ad541f3a1b1f4f3a8c2ff8c/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="fc5624185d414a0f572bfb3df7d841ceb335aef9">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_67750906b84ea5f0b56abb6c79479912d20b7629.jar" />
+        revision="26.0.2"
+        sha1="f428e2fbc9ed0b297e3a3f420e51e6982f66822d">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_7ec0ce883aefba66b557f2184a99b5007d54fb3b.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/9dfb536ea5c4dd12f7a0b93402dd6cb1a6422635/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/2e42c96d27fe28a25a1807f8902ae0f8601dc316/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="9e8c74e789b51b9da4070aeaed71bae36c3d244f">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_36b37f42ff2b0ae1cb099a1198fe16e843acceda.jar" />
+        revision="26.0.2"
+        sha1="2d45b277afdf55bcfdc005c03c0c2f1733aaa1b0">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_ae8203c6048b769c4034772bc892bd6f64da0f67.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/c8e68bd218e0f3e4f12646363fa9f7489617c43f/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/dad0ce0ed47893eeb718f534e95783ea7e48a450/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="cddcd0fb93bc70e27325f2f715b2710332004ebb">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_8e867ac60041f100971835e3d00351cb7008869c.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/06e18053113810f69a94662e2ddf296e9fd9b159/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="9935891f23923f39d002087085d9696568a9f657">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_7fc75e7e63df8cb0906efe96efc897f00e9c7b55.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/82c483c3bad6020deff49badfa0bd73b4aaf5c4f/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="18d31838aa4fcc768a8a0516e22cc13b94655d89">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_d8cfe34a5372b4338096b47cb89b908c5ad6bd4c.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/26.0.0-alpha1/support-annotations-26.0.0-alpha1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="023ee503b631f69511e335a061ea008f8da60f40">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/support-annotations-26.0.0-alpha1_f1e9c8b4f8cba9bef95fe1fd181e8058865ad1ff.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/2e9e2be2a5d01767cd4ba2e78a999586bb43cc6a/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="6a022bf00ccd0948a8180c505e8e458bbddd43a6">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_6e8237f7ff8e19c01b4444918f404609115c8a89.jar" />
+        revision="26.0.2"
+        sha1="58b12bdb21a84f22e0dc3b047aeceb0a546b1b44">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_f6b50ab9760e43db3b7d6c45d93498d2d3f2a967.jar" />
     </item>
     <item
         is-multidex="false"
@@ -173,103 +137,175 @@
         <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_ff1a041e2fb333a304fc3283091f6d3097176e20.jar" />
     </item>
     <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/03286e24a3b6a46948ef7d902433437fd15ae7d4/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="f260cdc1a267b17b911022919f19d568e6624229">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_424eb080cf9db4b7bc33b7a2ef4940be05c49127.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/2220331509fcc63878bfb85ce36aa817ce1803b2/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="a71be5f29a1c1e3fd3e84472742668f101a5b936">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_4479715ab49e087087f822d0711e47243a7cc3a5.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/e42fd72479ad1aedd699f6e57127d3dc2f369c8b/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="2e92aa0163544a804a0b34f169ca61801770839a">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_28b532d967ece4879e56259daba57ab6b46b7776.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/a78ffebf09b181ad3e461da3207f58f0e612520c/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="2737331564e0084fc0eb30ba500564a6dbe5e98f">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_2a70a5e575cfa5855bf0e8b52f978851d3b97c97.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/1e9318544d5abcaabdeacf29343a964354693427/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="d7c42c80f6509b9ea4db28ca7859ffae08ec5741">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_d9389b8026a35ecc44f4d7cff6f5e84a39161b65.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/a911f20c3a5ee6594120953625e50d833e779501/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="4802b21cc23549f7eba5edb802241091ad998b35">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_a822125b9c8811c64748e535b09d719abb6c28cd.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/4d763932b07a967703dcbd912c77f21dbe5cbe56/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="fcd01fd11233459f546c437ec927e9b61bf7caf1">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_069f495a55a30608410b65f45a836423f52ecbf7.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/f90552ab84d48c38bb865983976fe1069bf06f7b/output/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="26.0.1"
-        sha1="9a6350134db98fb39e212ddca5f0bad9280e8f3f">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_cd60f7e3399297f79c6830113a7e9d7da3897195.jar" />
-    </item>
-    <item
         is-multidex="true"
         jar="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/incremental-classes/debug/instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
-        revision="26.0.1"
-        sha1="6e8d8d6bb04dc5e0ab1eba669443c589d361deb8">
+        revision="26.0.2"
+        sha1="9e695b73e9d93f05d09dd46c8d010cc9f5aca1a2">
         <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run-bootstrap_02aa717ea3bcf083baaad6b706afe84984fe3667/classes.dex" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/8f2d97173b21c6203c73efaf643ad0579682345c/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/35dafdcf555e2188c2ff40f22997df76040b6967/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.1"
-        sha1="2a2d9cd43adbe7599a78f2293273a77881c1909a">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_c98653ee5bc35b36eee2974d8091af5386ce9ec1.jar" />
+        revision="26.0.2"
+        sha1="7efef32744ca4a436492d5cf28c08698cc2af256">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_360f8b934742d3ebf904667d2b711b0866f5c9cc.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/mordechai/.android/build-cache/03286e24a3b6a46948ef7d902433437fd15ae7d4/output/jars/classes.jar"
+        jar="/Users/mordechai/.android/build-cache/ed5b95a9c1c861887e643d5f1a579223d6107341/output/jars/classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="26.0.0"
-        sha1="f260cdc1a267b17b911022919f19d568e6624229">
-        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_424eb080cf9db4b7bc33b7a2ef4940be05c49127.jar" />
+        revision="26.0.2"
+        sha1="44ee06abb66da30f5855e6bf54574e64cdcd982a">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_1526b467d919464e39611de45c85e76cf000a6db.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/91d7290ad4acb49d8758ee21b4df5e0345dd3250/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b4d6fbbb48b42dd03fd9c5a09b3b7a53266df6ed">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_e918a784c88067d0aa86b8df01cf47284a92f029.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/4718dd77b97c9ada83804d8643064820e505d4c2/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6f4138a4e065826cb044d49faea4cfd7191773d1">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_e77318226150ce0bd7320c1ab1bb2cba59d7b2de.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/3d4572d04fbf221afb59ce7cc232ab2743249448/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="f97cf85b0fe70d37a705111dafa6b1b418ea1650">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_5c3f2b125d056d85895870813272d5151df25c53.jar" />
+    </item>
+    <item
+        is-multidex="true"
+        jar="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/incremental-runtime-classes/debug/instant-run.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="26.0.2"
+        sha1="3be78ebc2706b2e1fe2f12d5726887a92d6c183b">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/transforms/dex/debug/folders/1000/10000/instant-run_cad0b8cd6247aecb3764623bcc0fdd5f56d25bde/classes.dex" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/cbb5a625069be79a1c7acc47a355bd48bc850998/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="5f519b8c692038a47ee404b6ea6b847f6402000c">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_2a0cb6f6f13ba2f933dfea78b3013241d87e0902.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/a37daaf76617f8f916bf3732d5f6524335b1fcdd/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b12cd9c87c3dfb012a911b6e38d2444ed0a65e1f">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_4dbc65672c3d1322e4510ce536725661fb76af5a.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/8480f112713d6473cce2d677dc27a1be30732e7e/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="508f50705b4fde51a16259f29c854201a3044516">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_51e92a9a9be88c4b4f0d2b1811fbedd21f96271e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.gradle/caches/modules-2/files-2.1/com.android.support/support-annotations/26.1.0/814258103cf26a15fcc26ecce35f5b7d24b73f8/support-annotations-26.1.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="0814258103cf26a15fcc26ecce35f5b7d24b73f8">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/support-annotations-26.1.0_ee7486d50e7c3af9a2140a60e96066aa7e699e8c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/79d79c6ef846b3f21ece32d9d27a554542e269ef/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="2442771a5590dd4eb4bce00c2e9dca9e22e4c963">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_a582b665a637b7bed38873bcc702c8f26cbdac42.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.gradle/caches/modules-2/files-2.1/android.arch.lifecycle/common/1.0.0/e414a4cb28434e25c4f6aa71426eb20cf4874ae9/common-1.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="e414a4cb28434e25c4f6aa71426eb20cf4874ae9">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/common-1.0.0_c44fecb1ce84687773cab0eaccb00a53b57f6875.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/5454bdb468ebfcb201b40aab49af3c05a352a35a/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6555c483abcdcc71ef5f1d47bb1ff3fee35ef1b2">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_0b7bde273943885f38108d456b344da47d426bc0.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/b21a6260dcf8740fa95f5e8367cf25e38967d12c/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="20d6aa9a18ea9833cd2bee95dff7cd303cdb80e4">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_09ef777597bc3b992c5233335af88118bd571d40.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/594e36ec9d8ef4590837d0909804dc809680ff51/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="643a2fd3bd06c44be5d20efc0ba4ca02036d2c8a">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_b98856e8414c3a9d979c492d731ea2b076be2b08.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.android/build-cache/4b9acbb99aca1397a00f3a7827169a2a4b2908c6/output/jars/classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="6e6b94b72d7912a627fb1629c310b2bca9261f06">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/classes_aa2f34c8cc43bf05e7bc6bbacd4b3a8095705729.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/.gradle/caches/modules-2/files-2.1/android.arch.core/common/1.0.0/a2d487452376193fc8c103dd2b9bd5f2b1b44563/common-1.0.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="a2d487452376193fc8c103dd2b9bd5f2b1b44563">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/common-1.0.0_5252c2f5a8ba6f66e3bb79363539316e79866c9c.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="/Users/mordechai/Library/Android/sdk/extras/m2repository/com/android/support/constraint/constraint-layout-solver/1.0.2/constraint-layout-solver-1.0.2.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="26.0.2"
+        sha1="b9cd8fc6bd15cb915735d34535db30ece0c44603">
+        <dex dex="/Users/mordechai/Documents/AndroidStudioProjects/boommates/app/build/intermediates/pre-dexed/debug/constraint-layout-solver-1.0.2_ff1a041e2fb333a304fc3283091f6d3097176e20.jar" />
     </item>
 
 </items>

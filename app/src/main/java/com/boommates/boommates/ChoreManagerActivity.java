@@ -46,7 +46,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_chore_manager);
+        setContentView(R.layout.activity_list_manager);
         getSupportActionBar().setTitle(getString(R.string.chore_manager_title));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -167,35 +167,29 @@ public class ChoreManagerActivity extends AppCompatActivity {
     public void createNewListItem() {
         LayoutInflater li = LayoutInflater.from(this);
         View addChoreView = li.inflate(R.layout.dialog_add_chore, null);
-
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChoreManagerActivity.this);
         alertDialogBuilder.setView(addChoreView);
-
-        final TextInputEditText userInput = addChoreView.findViewById(R.id.chore_name_input);
+        final TextInputEditText userInput = addChoreView.findViewById(R.id.add_chore_input);
 
         alertDialogBuilder
                 .setCancelable(true)
                 .setPositiveButton("ADD TASK", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        final String choreName = userInput.getText().toString();
-                        if (choreName.equals("")) {
-                            return;
-                        } else {
+                        final String choreName = userInput.getText().toString().trim();
+                        if (!choreName.equals("")) {
                             for (String chore : chores) {
                                 if (choreName.equals(chore)) {
                                     Toast toast = Toast.makeText(ChoreManagerActivity.this, getString(R.string.err_chore_exists), Toast.LENGTH_SHORT);
                                     TextView text = toast.getView().findViewById(android.R.id.message);
                                     text.setGravity(Gravity.CENTER);
                                     toast.show();
-                                    return;
                                 }
                             }
                             resetBooms();
                             addChore(choreName);
                         }
                     }
-                }).create()
-                .show();
+                }).create().show();
     }
 
     private void updateUI() {
@@ -204,7 +198,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
     }
 
     private void initChoreView() {
-        choreView = findViewById(R.id.chore_list_recycler_view);
+        choreView = findViewById(R.id.list_manager_recycler_view);
         choreView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         choreView.setLayoutManager(layoutManager);

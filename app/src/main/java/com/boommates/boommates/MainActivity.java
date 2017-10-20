@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
                 public void onDataChange(DataSnapshot userGroupSnap) {
                     String groupID = userGroupSnap.getValue(String.class);
                     if (groupID.equals("none")) {
-                        Intent intent = new Intent(MainActivity.this, GroupChooserActivity.class);
+                        Intent intent = new Intent(MainActivity.this, JoinGroupActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();

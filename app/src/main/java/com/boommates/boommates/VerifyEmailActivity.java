@@ -78,7 +78,7 @@ public class VerifyEmailActivity extends AppCompatActivity {
             Map<String, Object> childUpdates = new HashMap<>();
             childUpdates.put("/users/" + user.getUid(), userValues);
             FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
-            Intent intent = new Intent(VerifyEmailActivity.this, GroupChooserActivity.class);
+            Intent intent = new Intent(VerifyEmailActivity.this, JoinGroupActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
