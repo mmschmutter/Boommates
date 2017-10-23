@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SpannableStringBuilder title = new SpannableStringBuilder("BOOMmates");
-        ForegroundColorSpan color = new ForegroundColorSpan(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+        ForegroundColorSpan color = new ForegroundColorSpan(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
         StyleSpan style = new StyleSpan(android.graphics.Typeface.BOLD);
         title.setSpan(color, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         title.setSpan(style, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
