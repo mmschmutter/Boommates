@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -167,13 +168,13 @@ public class ChoreManagerActivity extends AppCompatActivity {
     public void createNewListItem() {
         LayoutInflater li = LayoutInflater.from(this);
         View addChoreView = li.inflate(R.layout.dialog_add_chore, null);
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChoreManagerActivity.this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChoreManagerActivity.this, R.style.AlertDialogTheme);
         alertDialogBuilder.setView(addChoreView);
         final TextInputEditText userInput = addChoreView.findViewById(R.id.add_chore_input);
-
-        alertDialogBuilder
+        AlertDialog alert = alertDialogBuilder
                 .setCancelable(true)
-                .setPositiveButton("ADD TASK", new DialogInterface.OnClickListener() {
+                .setTitle(R.string.chore_alert)
+                .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         final String choreName = userInput.getText().toString().trim();
                         if (!choreName.equals("")) {
@@ -189,7 +190,9 @@ public class ChoreManagerActivity extends AppCompatActivity {
                             addChore(choreName);
                         }
                     }
-                }).create().show();
+                }).create();
+        alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        alert.show();
     }
 
     private void updateUI() {

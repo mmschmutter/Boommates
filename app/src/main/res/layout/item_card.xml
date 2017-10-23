@@ -37,6 +37,7 @@
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/card_button"
             android:fontFamily="sans-serif"
+            android:maxLines="1"
             android:textSize="35sp"
             tools:text="Dishes" />
     </RelativeLayout>

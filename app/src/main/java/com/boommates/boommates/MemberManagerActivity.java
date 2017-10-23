@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -63,12 +64,13 @@ public class MemberManagerActivity extends AppCompatActivity {
             public void onClick(View view) {
                 LayoutInflater li = LayoutInflater.from(MemberManagerActivity.this);
                 View addMemberView = li.inflate(R.layout.dialog_add_member, null);
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MemberManagerActivity.this);
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MemberManagerActivity.this, R.style.AlertDialogTheme);
                 alertDialogBuilder.setView(addMemberView);
                 final TextInputEditText userInput = addMemberView.findViewById(R.id.add_member_input);
-                alertDialogBuilder
+                AlertDialog alert = alertDialogBuilder
                         .setCancelable(true)
-                        .setPositiveButton("ADD MEMBER", new DialogInterface.OnClickListener() {
+                        .setTitle(R.string.member_alert)
+                        .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String memberEmail = userInput.getText().toString().trim().toLowerCase();
                                 if (isEmailValid(memberEmail)) {
@@ -80,7 +82,9 @@ public class MemberManagerActivity extends AppCompatActivity {
                                     toast.show();
                                 }
                             }
-                        }).create().show();
+                        }).create();
+                alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                alert.show();
             }
         });
         userList = FirebaseDatabase.getInstance().getReference("users");

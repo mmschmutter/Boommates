@@ -7,6 +7,10 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableStringBuilder;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.StyleSpan;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -50,9 +54,16 @@ public class MainActivity extends AppCompatActivity {
     private CountDownTimer timer;
     private RecyclerView.Adapter adapter;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        SpannableStringBuilder title = new SpannableStringBuilder("BOOMmates");
+        ForegroundColorSpan color = new ForegroundColorSpan(ContextCompat.getColor(getApplicationContext(), R.color.colorAccent));
+        StyleSpan style = new StyleSpan(android.graphics.Typeface.BOLD);
+        title.setSpan(color, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        title.setSpan(style, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        getSupportActionBar().setTitle(title);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
