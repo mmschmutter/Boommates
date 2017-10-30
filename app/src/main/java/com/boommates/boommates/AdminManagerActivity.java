@@ -70,22 +70,12 @@ public class AdminManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildAdded(DataSnapshot memberSnap, String s) {
                         Log.d(TAG + "Added", memberSnap.toString());
-                        userList.child(memberSnap.getKey()).child("userEmail").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot memberEmailSnap) {
-                                String memberEmail = memberEmailSnap.getValue(String.class);
-                                if (!memberEmail.equals(user.getEmail())) {
-                                    members.add(memberEmail);
-                                }
-                                updateUI();
-                                progressBar.setVisibility(View.GONE);
-                            }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.d(TAG + "Cancelled", databaseError.toString());
-                            }
-                        });
+                        String memberID = memberSnap.getKey();
+                        if (!memberID.equals(user.getUid())) {
+                            members.add(memberID);
+                            updateUI();
+                            progressBar.setVisibility(View.GONE);
+                        }
                     }
 
                     @Override
@@ -96,12 +86,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(DataSnapshot memberSnap) {
                         Log.d(TAG + "Removed", memberSnap.toString());
-                        String memberEmail = memberSnap.child("userEmail").getValue(String.class);
-                        for (String member : members) {
-                            if (member.equals(memberEmail)) {
-                                members.remove(member);
-                            }
-                        }
+                        members.remove(memberSnap.getKey());
                         updateUI();
                     }
 
@@ -159,19 +144,20 @@ public class AdminManagerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-            viewHolder.tv_email.setTextSize(25);
-            viewHolder.tv_email.setText(members.get(i));
-            viewHolder.button_set_admin.setOnClickListener(new View.OnClickListener() {
+            userList.child(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onClick(View view) {
-                    userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+                public void onDataChange(final DataSnapshot userSnap) {
+                    final String userEmail = userSnap.child("userEmail").getValue(String.class);
+                    final String userName = userSnap.child("userName").getValue(String.class);
+                    final String groupID = userSnap.child("userGroup").getValue(String.class);
+                    viewHolder.tv_email.setText(userName);
+                    viewHolder.button_set_admin.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onDataChange(final DataSnapshot userGroupSnap) {
-                            final String groupID = userGroupSnap.getValue(String.class);
+                        public void onClick(View view) {
                             groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot groupSnap) {
-                                    groupList.child(groupID).child("groupAdmin").setValue(members.get(i));
+                                    groupList.child(groupID).child("groupAdmin").setValue(userEmail);
                                     String userChore = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
                                     if (!userChore.equals("none")) {
                                         groupList.child(groupID).child("groupChores").child(userChore).removeValue();
@@ -202,12 +188,12 @@ public class AdminManagerActivity extends AppCompatActivity {
                                 }
                             });
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG + "Cancelled", databaseError.toString());
-                        }
                     });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG + "Cancelled", databaseError.toString());
                 }
             });
         }
