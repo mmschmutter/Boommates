@@ -280,7 +280,6 @@ public class MemberManagerActivity extends AppCompatActivity {
                     final String userID = userSnap.getKey();
                     final String userName = userSnap.child("userName").getValue(String.class);
                     final String groupID = userSnap.child("userGroup").getValue(String.class);
-                    viewHolder.tv_email.setTextSize(25);
                     viewHolder.tv_email.setText(userName);
                     viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
                         @Override

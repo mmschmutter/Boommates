@@ -21,10 +21,12 @@
 
         <TextView
             android:id="@+id/header"
-            android:layout_width="350dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
             android:gravity="center_horizontal"
+            android:paddingEnd="15dp"
+            android:paddingStart="15dp"
             android:textColor="@color/colorText"
             android:textSize="20sp"
             app:layout_constraintLeft_toRightOf="parent"
