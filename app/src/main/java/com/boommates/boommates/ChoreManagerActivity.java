@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -166,18 +167,24 @@ public class ChoreManagerActivity extends AppCompatActivity {
     }
 
     public void createNewListItem() {
-        LayoutInflater li = LayoutInflater.from(this);
+        LayoutInflater li = LayoutInflater.from(ChoreManagerActivity.this);
         View addChoreView = li.inflate(R.layout.dialog_add_chore, null);
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ChoreManagerActivity.this, R.style.AlertDialogTheme);
         alertDialogBuilder.setView(addChoreView);
         final TextInputEditText userInput = addChoreView.findViewById(R.id.add_chore_input);
+        TextView title = new TextView(ChoreManagerActivity.this);
+        title.setText(R.string.chore_alert);
+        title.setPadding(0, 50, 0, 0);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(ContextCompat.getColor(ChoreManagerActivity.this, R.color.colorPrimaryDark));
+        title.setTextSize(20);
         AlertDialog alert = alertDialogBuilder
                 .setCancelable(true)
-                .setTitle(R.string.chore_alert)
+                .setCustomTitle(title)
                 .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         final String choreName = userInput.getText().toString().trim();
-                        if (!choreName.equals("")) {
+                        if (!choreName.isEmpty()) {
                             for (String chore : chores) {
                                 if (choreName.equals(chore)) {
                                     Toast toast = Toast.makeText(ChoreManagerActivity.this, getString(R.string.err_chore_exists), Toast.LENGTH_SHORT);

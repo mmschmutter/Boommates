@@ -28,7 +28,6 @@ public class JoinGroupActivity extends AppCompatActivity {
     private ProgressBar progressBar;
     private DatabaseReference groupList, userList;
     private Button btnCreateGroup;
-
     private FirebaseUser user;
 
     @Override

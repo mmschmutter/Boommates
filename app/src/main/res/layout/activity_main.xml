@@ -21,9 +21,10 @@
 
         <TextView
             android:id="@+id/header"
-            android:layout_width="wrap_content"
+            android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif"
+            android:gravity="center_horizontal"
             android:textColor="@color/colorText"
             android:textSize="20sp"
             app:layout_constraintLeft_toRightOf="parent"
@@ -36,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-light"
+            android:gravity="center_horizontal"
             android:textColor="@color/colorText"
             android:textSize="50sp"
             app:layout_constraintLeft_toRightOf="parent"
@@ -84,7 +86,7 @@
             android:id="@+id/timer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:textColor="@color/colorText"
             android:textSize="20sp"
             app:layout_constraintLeft_toRightOf="@+id/first_x"

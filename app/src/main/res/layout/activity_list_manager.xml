@@ -26,7 +26,7 @@
         android:layout_margin="25dp"
         android:clickable="true"
         android:tint="@color/colorText"
-        app:backgroundTint="@color/colorPrimaryDark"
+        app:backgroundTint="@color/colorPrimary"
         tools:src="@drawable/plus_sign" />
 
 </android.support.design.widget.CoordinatorLayout>

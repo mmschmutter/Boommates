@@ -4,6 +4,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -67,9 +68,15 @@ public class MemberManagerActivity extends AppCompatActivity {
                 AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MemberManagerActivity.this, R.style.AlertDialogTheme);
                 alertDialogBuilder.setView(addMemberView);
                 final TextInputEditText userInput = addMemberView.findViewById(R.id.add_member_input);
+                TextView title = new TextView(MemberManagerActivity.this);
+                title.setText(R.string.member_alert);
+                title.setPadding(0, 50, 0, 0);
+                title.setGravity(Gravity.CENTER);
+                title.setTextColor(ContextCompat.getColor(MemberManagerActivity.this, R.color.colorPrimaryDark));
+                title.setTextSize(20);
                 AlertDialog alert = alertDialogBuilder
                         .setCancelable(true)
-                        .setTitle(R.string.member_alert)
+                        .setCustomTitle(title)
                         .setPositiveButton("ADD", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 final String memberEmail = userInput.getText().toString().trim().toLowerCase();
@@ -113,19 +120,9 @@ public class MemberManagerActivity extends AppCompatActivity {
                         Log.d(TAG + "Added", memberSnap.toString());
                         String memberID = memberSnap.getKey();
                         if (!memberID.equals(user.getUid())) {
-                            userList.child(memberID).child("userEmail").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(DataSnapshot memberEmailSnap) {
-                                    members.add(memberEmailSnap.getValue(String.class));
-                                    updateUI();
-                                    progressBar.setVisibility(View.GONE);
-                                }
-
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.d(TAG + "Cancelled", databaseError.toString());
-                                }
-                            });
+                            members.add(memberID);
+                            updateUI();
+                            progressBar.setVisibility(View.GONE);
                         }
                     }
 
@@ -137,24 +134,13 @@ public class MemberManagerActivity extends AppCompatActivity {
                     @Override
                     public void onChildRemoved(DataSnapshot memberSnap) {
                         Log.d(TAG + "Removed", memberSnap.toString());
-                        userList.child(memberSnap.getKey()).child("userEmail").addListenerForSingleValueEvent(new ValueEventListener() {
-                            @Override
-                            public void onDataChange(DataSnapshot memberEmailSnap) {
-                                String memberEmail = memberEmailSnap.getValue(String.class);
-                                Iterator<String> membersIterator = members.iterator();
-                                while (membersIterator.hasNext()) {
-                                    if (membersIterator.next().equals(memberEmail)) {
-                                        membersIterator.remove();
-                                    }
-                                }
-                                updateUI();
+                        Iterator<String> membersIterator = members.iterator();
+                        while (membersIterator.hasNext()) {
+                            if (membersIterator.next().equals(memberSnap.getKey())) {
+                                membersIterator.remove();
                             }
-
-                            @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                Log.d(TAG + "Cancelled", databaseError.toString());
-                            }
-                        });
+                        }
+                        updateUI();
                     }
 
                     @Override
@@ -288,17 +274,17 @@ public class MemberManagerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-            viewHolder.tv_email.setTextSize(25);
-            viewHolder.tv_email.setText(members.get(i));
-            viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
+            userList.child(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onClick(View view) {
-                    userList.orderByChild("userEmail").equalTo(members.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                public void onDataChange(DataSnapshot userSnap) {
+                    final String userID = userSnap.getKey();
+                    final String userName = userSnap.child("userName").getValue(String.class);
+                    final String groupID = userSnap.child("userGroup").getValue(String.class);
+                    viewHolder.tv_email.setTextSize(25);
+                    viewHolder.tv_email.setText(userName);
+                    viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
                         @Override
-                        public void onDataChange(DataSnapshot usersSnap) {
-                            final DataSnapshot targetUser = usersSnap.getChildren().iterator().next();
-                            final String userID = targetUser.getKey();
-                            final String groupID = targetUser.child("userGroup").getValue(String.class);
+                        public void onClick(View view) {
                             groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
                                 @Override
                                 public void onDataChange(DataSnapshot groupSnap) {
@@ -320,12 +306,12 @@ public class MemberManagerActivity extends AppCompatActivity {
                                 }
                             });
                         }
-
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG + "Cancelled", databaseError.toString());
-                        }
                     });
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Log.d(TAG + "Cancelled", databaseError.toString());
                 }
             });
         }

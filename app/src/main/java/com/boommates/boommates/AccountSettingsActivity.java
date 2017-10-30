@@ -1,12 +1,18 @@
 package com.boommates.boommates;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,6 +48,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         userList = FirebaseDatabase.getInstance().getReference("users");
         Button btnLogout = findViewById(R.id.btn_account_logout);
         Button btnLeaveGroup = findViewById(R.id.btn_account_leave);
+        Button btnChangeName = findViewById(R.id.btn_account_name);
         Button btnChangePassword = findViewById(R.id.btn_account_password);
         Button btnDeleteAccount = findViewById(R.id.btn_account_delete);
         progressBar = findViewById(R.id.progress_settings);
@@ -58,6 +65,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 leaveGroup();
             }
         });
+        btnChangeName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                changeName();
+            }
+        });
         btnChangePassword.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -72,7 +85,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void logout(){
+    private void logout() {
         progressBar.setVisibility(View.VISIBLE);
         userList.child(user.getUid()).child("userToken").setValue("none");
         FirebaseAuth.getInstance().signOut();
@@ -83,7 +96,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         finish();
     }
 
-    private void leaveGroup(){
+    private void leaveGroup() {
         progressBar.setVisibility(View.VISIBLE);
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -150,7 +163,38 @@ public class AccountSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void changePassword(){
+    private void changeName() {
+        LayoutInflater li = LayoutInflater.from(AccountSettingsActivity.this);
+        View changeNameView = li.inflate(R.layout.dialog_change_name, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(AccountSettingsActivity.this, R.style.AlertDialogTheme);
+        alertDialogBuilder.setView(changeNameView);
+        final TextInputEditText userInput = changeNameView.findViewById(R.id.change_name_input);
+        TextView title = new TextView(AccountSettingsActivity.this);
+        title.setText(R.string.name_alert);
+        title.setPadding(0, 50, 0, 0);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(ContextCompat.getColor(AccountSettingsActivity.this, R.color.colorPrimaryDark));
+        title.setTextSize(20);
+        AlertDialog alert = alertDialogBuilder
+                .setCancelable(true)
+                .setCustomTitle(title)
+                .setPositiveButton("CHANGE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String userName = userInput.getText().toString().trim();
+                        if (!userName.isEmpty()) {
+                            userList.child(user.getUid()).child("userName").setValue(userName);
+                            Toast toast = Toast.makeText(AccountSettingsActivity.this, getString(R.string.name_change_success), Toast.LENGTH_SHORT);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                        }
+                    }
+                }).create();
+        alert.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        alert.show();
+    }
+
+    private void changePassword() {
         progressBar.setVisibility(View.VISIBLE);
         FirebaseAuth.getInstance().sendPasswordResetEmail(user.getEmail())
                 .addOnCompleteListener(new OnCompleteListener<Void>() {
@@ -174,7 +218,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
                 });
     }
 
-    private void deleteAccount(){
+    private void deleteAccount() {
         progressBar.setVisibility(View.VISIBLE);
         userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -225,7 +269,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         });
     }
 
-    private void deleteUser(){
+    private void deleteUser() {
         userList.child(user.getUid()).removeValue();
         user.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

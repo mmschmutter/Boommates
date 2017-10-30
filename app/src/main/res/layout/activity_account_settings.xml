@@ -27,6 +27,15 @@
         android:textColor="@color/colorText" />
 
     <Button
+        android:id="@+id/btn_account_name"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/btn_account_name"
+        android:textColor="@color/colorText" />
+
+    <Button
         android:id="@+id/btn_account_password"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

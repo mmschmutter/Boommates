@@ -20,6 +20,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -28,8 +33,8 @@ public class SignupActivity extends AppCompatActivity {
     private Button btnSignUp;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
-    private EditText signupInputEmail, signupInputPassword, signupInputConfirmPassword;
-    private TextInputLayout signupInputLayoutEmail, signupInputLayoutPassword, signupInputLayoutConfirmPassword;
+    private EditText signupInputEmail, signupInputPassword, signupInputConfirmPassword, signupInputName;
+    private TextInputLayout signupInputLayoutEmail, signupInputLayoutPassword, signupInputLayoutConfirmPassword, signupInputLayoutName;
 
 
     @Override
@@ -41,11 +46,13 @@ public class SignupActivity extends AppCompatActivity {
 
         TextView directions = findViewById(R.id.signup_directions);
         directions.setText(R.string.create_account_directions);
+        signupInputLayoutName = findViewById(R.id.signup_input_layout_name);
         signupInputLayoutEmail = findViewById(R.id.signup_input_layout_email);
         signupInputLayoutPassword = findViewById(R.id.signup_input_layout_password);
         signupInputLayoutConfirmPassword = findViewById(R.id.signup_input_layout_confirm_password);
         progressBar = findViewById(R.id.progress_signup);
 
+        signupInputName = findViewById(R.id.signup_input_name);
         signupInputEmail = findViewById(R.id.signup_input_email);
         signupInputPassword = findViewById(R.id.signup_input_password);
         signupInputConfirmPassword = findViewById(R.id.signup_input_confirm_password);
@@ -80,24 +87,22 @@ public class SignupActivity extends AppCompatActivity {
         signupInputLayoutEmail.setError(null);
         signupInputLayoutPassword.setError(null);
         signupInputLayoutConfirmPassword.setError(null);
+        signupInputLayoutEmail.setErrorEnabled(false);
+        signupInputLayoutPassword.setErrorEnabled(false);
 
+        final String name = signupInputName.getText().toString().trim();
         String email = signupInputEmail.getText().toString().trim().toLowerCase();
         String password = signupInputPassword.getText().toString().trim();
 
+        if (!checkName()) {
+            return;
+        }
         if (!checkEmail()) {
             return;
         }
         if (!checkPassword()) {
             return;
         }
-        signupInputEmail.setError(null);
-        signupInputPassword.setError(null);
-        signupInputConfirmPassword.setError(null);
-        signupInputLayoutEmail.setError(null);
-        signupInputLayoutPassword.setError(null);
-        signupInputLayoutConfirmPassword.setError(null);
-        signupInputLayoutEmail.setErrorEnabled(false);
-        signupInputLayoutPassword.setErrorEnabled(false);
 
         btnSignUp.setVisibility(View.INVISIBLE);
         progressBar.setVisibility(View.VISIBLE);
@@ -115,27 +120,36 @@ public class SignupActivity extends AppCompatActivity {
                             text.setGravity(Gravity.CENTER);
                             toast.show();
                         } else {
-                            FirebaseAuth.getInstance().getCurrentUser().sendEmailVerification()
-                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Void> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d(TAG, "Email sent.");
-                                                progressBar.setVisibility(View.INVISIBLE);
-                                                Toast toast = Toast.makeText(SignupActivity.this, getString(R.string.successful_registration), Toast.LENGTH_SHORT);
-                                                TextView text = toast.getView().findViewById(android.R.id.message);
-                                                text.setGravity(Gravity.CENTER);
-                                                toast.show();
-                                                Intent intent = new Intent(SignupActivity.this, VerifyEmailActivity.class);
-                                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                                finish();
-                                            }
-                                        }
-                                    });
+                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                            Map<String, String> userValues = new HashMap<>();
+                            userValues.put("userName", name);
+                            userValues.put("userEmail", user.getEmail());
+                            userValues.put("userGroup", "none");
+                            Map<String, Object> childUpdates = new HashMap<>();
+                            childUpdates.put("/users/" + user.getUid(), userValues);
+                            FirebaseDatabase.getInstance().getReference().updateChildren(childUpdates);
+                            progressBar.setVisibility(View.INVISIBLE);
+                            Toast toast = Toast.makeText(SignupActivity.this, getString(R.string.successful_registration), Toast.LENGTH_SHORT);
+                            TextView text = toast.getView().findViewById(android.R.id.message);
+                            text.setGravity(Gravity.CENTER);
+                            toast.show();
+                            Intent intent = new Intent(SignupActivity.this, JoinGroupActivity.class);
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
                         }
                     }
                 });
+    }
+
+    private boolean checkName() {
+        String name = signupInputName.getText().toString().trim();
+        if (name.isEmpty()) {
+            signupInputName.setError(getString(R.string.err_msg_required));
+            requestFocus(signupInputName);
+            return false;
+        }
+        return true;
     }
 
     private boolean checkEmail() {
@@ -184,8 +198,7 @@ public class SignupActivity extends AppCompatActivity {
     private static boolean isPasswordValid(String password) {
         boolean lengthFlag = false;
         boolean numberFlag = false;
-        boolean upperCaseFlag = false;
-        boolean lowerCaseFlag = false;
+        boolean letterFlag = false;
         if (password.length() > 5) {
             lengthFlag = true;
         }
@@ -194,13 +207,11 @@ public class SignupActivity extends AppCompatActivity {
             c = password.charAt(i);
             if (Character.isDigit(c)) {
                 numberFlag = true;
-            } else if (Character.isUpperCase(c)) {
-                upperCaseFlag = true;
-            } else if (Character.isLowerCase(c)) {
-                lowerCaseFlag = true;
+            } else if (Character.isLetter(c)) {
+                letterFlag = true;
             }
         }
-        return lengthFlag && numberFlag && upperCaseFlag && lowerCaseFlag;
+        return lengthFlag && numberFlag && letterFlag;
     }
 
     private void requestFocus(View view) {

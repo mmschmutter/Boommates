@@ -70,11 +70,6 @@ public class MainActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
-        } else if (!user.isEmailVerified()) {
-            Intent intent = new Intent(MainActivity.this, VerifyEmailActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            finish();
         } else {
             setContentView(R.layout.activity_main);
             topProgressBar = findViewById(R.id.progress_main_top);
@@ -97,6 +92,18 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
+                        userList.child(user.getUid()).child("userName").addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot userNameSnap) {
+                                TextView header = findViewById(R.id.header);
+                                header.setText("Hey " + userNameSnap.getValue(String.class) + getString(R.string.header));
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG + "Cancelled", databaseError.toString());
+                            }
+                        });
                         checkBoomExpirations(groupID);
                         initDashboard(groupID);
                         initChoreView(groupID);
@@ -151,20 +158,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initDashboard(final String groupID) {
-        TextView header = (TextView) findViewById(R.id.header);
-        header.setText(R.string.header);
-        yourChoreView = (TextView) findViewById(R.id.your_chore_banner);
-        firstX = (ImageView) findViewById(R.id.first_x);
-        secondX = (ImageView) findViewById(R.id.second_x);
-        thirdX = (ImageView) findViewById(R.id.third_x);
-        fourthX = (ImageView) findViewById(R.id.fourth_x);
-        timerText = (TextView) findViewById(R.id.timer);
+        yourChoreView = findViewById(R.id.your_chore_banner);
+        firstX = findViewById(R.id.first_x);
+        secondX = findViewById(R.id.second_x);
+        thirdX = findViewById(R.id.third_x);
+        fourthX = findViewById(R.id.fourth_x);
+        timerText = findViewById(R.id.timer);
         groupList.child(groupID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(final DataSnapshot groupSnap) {
                 if (groupSnap.child("groupMembers").child(user.getUid()).exists()) {
                     final String yourChoreName = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
                     if (!yourChoreName.equals("none")) {
+                        yourChoreView.setPadding(0, 0, 0, 0);
                         yourChoreView.setText(yourChoreName);
                         final DataSnapshot yourChoreSnap = groupSnap.child("groupChores").child(yourChoreName);
                         if (yourChoreSnap.child("boomNumber").exists() && yourChoreSnap.child("lastBoom").exists()) {
@@ -340,6 +346,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNoChore() {
+        yourChoreView.setPadding(0, 0, 0, 25);
         yourChoreView.setText(getString(R.string.no_chore));
         firstX.setVisibility(View.GONE);
         secondX.setVisibility(View.GONE);
@@ -393,7 +400,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initChoreView(final String groupID) {
-        choreView = (RecyclerView) findViewById(R.id.chore_view);
+        choreView = findViewById(R.id.chore_view);
         choreView.setHasFixedSize(true);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
         choreView.setLayoutManager(layoutManager);
