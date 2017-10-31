@@ -46,7 +46,7 @@
     <string name="first_x_explanation">First BOOM\nThis BOOM will disappear if you do not receive another BOOM within 24 hours</string>
     <string name="second_x_explanation">Second BOOM\nAfter receiving this BOOM you will have a 24 hour grace period to complete your task</string>
     <string name="third_x_explanation">Third BOOM\nYou are vulnerable to receiving your final two BOOMs for 24 hours after your grace period, after those 24 hours all your BOOMs are reset</string>
-    <string name="fourth_x_explanation">Fourth BOOM\nYou will be charged upon receiving this BOOM</string>
+    <string name="fourth_x_explanation">Fourth BOOM\nYou will be exposed to your roommates as the one slacking on this task upon receiving this BOOM</string>
 
     <!-- other strings -->
     <string name="header">, your task for this week is</string>
@@ -91,4 +91,5 @@
     <string name="name_alert">Enter your new display name</string>
     <string name="name_change_success">Display name successfully changed</string>
     <string name="err_msg_password_length">Invalid password</string>
+    <string name="exposed">You\'ve been exposed as the slacker</string>
 </resources>

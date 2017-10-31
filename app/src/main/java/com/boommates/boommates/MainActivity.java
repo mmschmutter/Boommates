@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
                         finish();
                     } else {
                         FirebaseMessaging.getInstance().subscribeToTopic(user.getUid());
+                        FirebaseMessaging.getInstance().subscribeToTopic(groupID);
                         userList.child(user.getUid()).child("userName").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot userNameSnap) {
@@ -201,6 +202,8 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     } else if (boomNumber == 3) {
                                         setThreeXs(remainingTime, groupID);
+                                    } else if (boomNumber == 4) {
+                                        setFourXs();
                                     }
                                     setXToasts();
                                     showDashboard();
@@ -336,6 +339,14 @@ public class MainActivity extends AppCompatActivity {
                 checkBoomExpirations(groupID);
             }
         }.start();
+    }
+
+    private void setFourXs() {
+        firstX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+        secondX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+        thirdX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+        fourthX.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.boom_x));
+        timerText.setText(R.string.exposed);
     }
 
     private void showDashboard() {
