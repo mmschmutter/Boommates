@@ -35,6 +35,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(intent);
                         finish();
                     } else {
+                        FirebaseMessaging.getInstance().subscribeToTopic(user.getUid());
                         userList.child(user.getUid()).child("userName").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot userNameSnap) {
