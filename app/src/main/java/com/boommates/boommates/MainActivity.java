@@ -34,7 +34,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ServerValue;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
@@ -80,21 +79,26 @@ public class MainActivity extends AppCompatActivity {
             databaseTime = FirebaseDatabase.getInstance().getReference("currentTime");
             groupList = FirebaseDatabase.getInstance().getReference("groups");
             userList = FirebaseDatabase.getInstance().getReference("users");
-            userList.child(user.getUid()).child("userToken").setValue(FirebaseInstanceId.getInstance().getToken());
             chores = new ArrayList<>();
             rotateChores();
-            userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+            userList.child(user.getUid()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
-                public void onDataChange(DataSnapshot userGroupSnap) {
-                    String groupID = userGroupSnap.getValue(String.class);
+                public void onDataChange(DataSnapshot userSnap) {
+                    if (userSnap.hasChild("unsubscribe")) {
+                        for (DataSnapshot group : userSnap.child("unsubscribe").getChildren()) {
+                            FirebaseMessaging.getInstance().unsubscribeFromTopic(group.getKey());
+                        }
+                        userSnap.child("unsubscribe").getRef().removeValue();
+                    }
+                    String groupID = userSnap.child("userGroup").getValue(String.class);
                     if (groupID.equals("none")) {
                         Intent intent = new Intent(MainActivity.this, JoinGroupActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                         startActivity(intent);
                         finish();
                     } else {
-                        FirebaseMessaging.getInstance().subscribeToTopic(user.getUid());
                         FirebaseMessaging.getInstance().subscribeToTopic(groupID);
+                        FirebaseMessaging.getInstance().subscribeToTopic(user.getUid());
                         userList.child(user.getUid()).child("userName").addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(DataSnapshot userNameSnap) {
@@ -359,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNoChore() {
-        yourChoreView.setPadding(0, 0, 0, 25);
+        yourChoreView.setPadding(0, 0, 0, 20);
         yourChoreView.setText(getString(R.string.no_chore));
         firstX.setVisibility(View.GONE);
         secondX.setVisibility(View.GONE);

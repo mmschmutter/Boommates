@@ -184,6 +184,7 @@ public class MemberManagerActivity extends AppCompatActivity {
                     final DataSnapshot member = usersSnap.getChildren().iterator().next();
                     final String memberID = member.getKey();
                     final String memberGroup = member.child("userGroup").getValue(String.class);
+                    final String memberName = member.child("userName").getValue(String.class);
                     userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(DataSnapshot userGroupSnap) {
@@ -197,6 +198,11 @@ public class MemberManagerActivity extends AppCompatActivity {
                                         for (DataSnapshot chore : groupChoresSnap.getChildren()) {
                                             chore.getRef().child(memberID).setValue(0);
                                         }
+                                        progressBar.setVisibility(View.GONE);
+                                        Toast toast = Toast.makeText(MemberManagerActivity.this, memberName + " " + getString(R.string.member_added), Toast.LENGTH_SHORT);
+                                        TextView text = toast.getView().findViewById(android.R.id.message);
+                                        text.setGravity(Gravity.CENTER);
+                                        toast.show();
                                     }
 
                                     @Override
@@ -204,11 +210,6 @@ public class MemberManagerActivity extends AppCompatActivity {
                                         Log.d(TAG + "Cancelled", databaseError.toString());
                                     }
                                 });
-                                progressBar.setVisibility(View.GONE);
-                                Toast toast = Toast.makeText(MemberManagerActivity.this, memberEmail + " " + getString(R.string.member_added), Toast.LENGTH_SHORT);
-                                TextView text = toast.getView().findViewById(android.R.id.message);
-                                text.setGravity(Gravity.CENTER);
-                                toast.show();
                             } else {
                                 if (groupID.equals(memberGroup)) {
                                     progressBar.setVisibility(View.GONE);
@@ -297,6 +298,7 @@ public class MemberManagerActivity extends AppCompatActivity {
                                     for (DataSnapshot chore : groupChoresSnap) {
                                         chore.child(userID).getRef().removeValue();
                                     }
+                                    userList.child(userID).child("unsubscribe").child(groupID).setValue(true);
                                 }
 
                                 @Override

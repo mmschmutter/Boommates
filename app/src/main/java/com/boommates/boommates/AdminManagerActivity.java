@@ -26,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -150,6 +151,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                     final String userEmail = userSnap.child("userEmail").getValue(String.class);
                     final String userName = userSnap.child("userName").getValue(String.class);
                     final String groupID = userSnap.child("userGroup").getValue(String.class);
+                    FirebaseMessaging.getInstance().unsubscribeFromTopic(groupID);
                     viewHolder.tv_email.setText(userName);
                     viewHolder.button_set_admin.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -199,6 +201,7 @@ public class AdminManagerActivity extends AppCompatActivity {
         }
 
         private void deleteUser() {
+            FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getUid());
             userList.child(user.getUid()).removeValue();
             user.delete()
                     .addOnCompleteListener(new OnCompleteListener<Void>() {

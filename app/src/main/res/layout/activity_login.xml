@@ -25,6 +25,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_email"
+            android:importantForAutofill="noExcludeDescendants"
             android:inputType="textEmailAddress" />
     </android.support.design.widget.TextInputLayout>
 
@@ -40,6 +41,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_password"
+            android:importantForAutofill="noExcludeDescendants"
             android:inputType="textPassword" />
     </android.support.design.widget.TextInputLayout>
 

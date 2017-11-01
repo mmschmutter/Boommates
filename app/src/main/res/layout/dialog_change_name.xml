@@ -19,6 +19,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/hint_name"
+            android:importantForAutofill="noExcludeDescendants"
             android:inputType="textPersonName"
             app:backgroundTint="@color/colorPrimaryDark" />
     </android.support.design.widget.TextInputLayout>

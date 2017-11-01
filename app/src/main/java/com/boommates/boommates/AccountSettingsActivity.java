@@ -27,6 +27,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 public class AccountSettingsActivity extends AppCompatActivity {
 
@@ -46,12 +47,12 @@ public class AccountSettingsActivity extends AppCompatActivity {
         user = FirebaseAuth.getInstance().getCurrentUser();
         groupList = FirebaseDatabase.getInstance().getReference("groups");
         userList = FirebaseDatabase.getInstance().getReference("users");
+        progressBar = findViewById(R.id.progress_settings);
         Button btnLogout = findViewById(R.id.btn_account_logout);
         Button btnLeaveGroup = findViewById(R.id.btn_account_leave);
         Button btnChangeName = findViewById(R.id.btn_account_name);
         Button btnChangePassword = findViewById(R.id.btn_account_password);
         Button btnDeleteAccount = findViewById(R.id.btn_account_delete);
-        progressBar = findViewById(R.id.progress_settings);
 
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,13 +88,24 @@ public class AccountSettingsActivity extends AppCompatActivity {
 
     private void logout() {
         progressBar.setVisibility(View.VISIBLE);
-        userList.child(user.getUid()).child("userToken").setValue("none");
-        FirebaseAuth.getInstance().signOut();
-        progressBar.setVisibility(View.INVISIBLE);
-        Intent intent = new Intent(AccountSettingsActivity.this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
+        userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(final DataSnapshot userGroupSnap) {
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(userGroupSnap.getValue(String.class));
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getUid());
+                FirebaseAuth.getInstance().signOut();
+                progressBar.setVisibility(View.INVISIBLE);
+                Intent intent = new Intent(AccountSettingsActivity.this, LoginActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.d(TAG + "Cancelled", databaseError.toString());
+            }
+        });
     }
 
     private void leaveGroup() {
@@ -102,6 +114,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
                 final String groupID = userGroupSnap.getValue(String.class);
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(groupID);
                 groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot groupSnap) {
@@ -224,6 +237,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(final DataSnapshot userGroupSnap) {
                 final String groupID = userGroupSnap.getValue(String.class);
+                FirebaseMessaging.getInstance().unsubscribeFromTopic(groupID);
                 groupList.child(groupID).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(DataSnapshot groupSnap) {
@@ -270,6 +284,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
     }
 
     private void deleteUser() {
+        FirebaseMessaging.getInstance().unsubscribeFromTopic(user.getUid());
         userList.child(user.getUid()).removeValue();
         user.delete()
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

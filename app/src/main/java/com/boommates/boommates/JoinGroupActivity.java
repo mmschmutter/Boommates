@@ -36,7 +36,6 @@ public class JoinGroupActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join_group);
         getSupportActionBar().setTitle(getString(R.string.join_group_title));
         user = FirebaseAuth.getInstance().getCurrentUser();
-
         ImageView logo = findViewById(R.id.group_icon);
         logo.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.group));
         TextView directions = findViewById(R.id.join_group_directions);
