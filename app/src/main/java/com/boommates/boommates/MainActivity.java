@@ -419,7 +419,7 @@ public class MainActivity extends AppCompatActivity {
     private void initChoreView(final String groupID) {
         choreView = findViewById(R.id.chore_view);
         choreView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MainActivity.this);
         choreView.setLayoutManager(layoutManager);
         updateChoreView(groupID);
 

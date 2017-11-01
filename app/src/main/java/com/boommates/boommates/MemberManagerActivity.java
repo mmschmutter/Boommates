@@ -37,7 +37,7 @@ import java.util.Iterator;
 
 public class MemberManagerActivity extends AppCompatActivity {
 
-    private final String TAG = "MemberManager";
+    private final String TAG = "MemberManAct";
 
     private DatabaseReference groupList, userList;
     private RecyclerView memberView;
@@ -170,7 +170,7 @@ public class MemberManagerActivity extends AppCompatActivity {
     private void initMemberView() {
         memberView = findViewById(R.id.list_manager_recycler_view);
         memberView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(MemberManagerActivity.this);
         memberView.setLayoutManager(layoutManager);
         updateUI();
     }

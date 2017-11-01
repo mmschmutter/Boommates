@@ -37,7 +37,7 @@ import java.util.Map;
 
 public class ChoreManagerActivity extends AppCompatActivity {
 
-    private final String TAG = "ChoreManager";
+    private final String TAG = "ChoreManAct";
 
     private DatabaseReference groupList, userList;
     private RecyclerView choreView;
@@ -210,7 +210,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
     private void initChoreView() {
         choreView = findViewById(R.id.list_manager_recycler_view);
         choreView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(ChoreManagerActivity.this);
         choreView.setLayoutManager(layoutManager);
         updateUI();
     }

@@ -34,7 +34,7 @@ import java.util.Collections;
 
 public class AdminManagerActivity extends AppCompatActivity {
 
-    private final String TAG = "AdminManager";
+    private final String TAG = "AdminManAct";
 
     private DatabaseReference groupList, userList;
     private RecyclerView memberView;
@@ -118,7 +118,7 @@ public class AdminManagerActivity extends AppCompatActivity {
     private void initMemberView() {
         memberView = findViewById(R.id.list_selector_recycler_view);
         memberView.setHasFixedSize(true);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(AdminManagerActivity.this);
         memberView.setLayoutManager(layoutManager);
         updateUI();
     }
