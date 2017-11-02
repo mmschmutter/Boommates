@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -281,6 +282,7 @@ public class MemberManagerActivity extends AppCompatActivity {
                     final String userID = userSnap.getKey();
                     final String userName = userSnap.child("userName").getValue(String.class);
                     final String groupID = userSnap.child("userGroup").getValue(String.class);
+                    TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_email, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                     viewHolder.tv_email.setText(userName);
                     viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
                         @Override

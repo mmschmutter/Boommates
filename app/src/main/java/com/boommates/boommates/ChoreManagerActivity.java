@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -317,6 +318,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+            TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_chore, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             viewHolder.tv_chore.setText(chores.get(i));
             viewHolder.button_boom.setOnClickListener(new View.OnClickListener() {
                 @Override

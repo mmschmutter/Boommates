@@ -3,6 +3,7 @@ package com.boommates.boommates;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -152,6 +153,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                     final String userName = userSnap.child("userName").getValue(String.class);
                     final String groupID = userSnap.child("userGroup").getValue(String.class);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic(groupID);
+                    TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_email, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                     viewHolder.tv_email.setText(userName);
                     viewHolder.button_set_admin.setOnClickListener(new View.OnClickListener() {
                         @Override

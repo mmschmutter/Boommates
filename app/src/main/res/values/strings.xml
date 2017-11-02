@@ -53,7 +53,7 @@
     <string name="boom">BOOM</string>
     <string name="err_chore_exists">A task with that name already exists</string>
     <string name="err_num_chores">Cannot add more tasks than number of group members</string>
-    <string name="no_chore">🎉 Nothing! 🎉</string>
+    <string name="no_chore">Nothing!</string>
     <string name="timer_reset">until BOOMs reset</string>
     <string name="timer_vulnerable">left in grace period</string>
     <string name="btn_remove_members">Remove Group Members</string>
@@ -92,4 +92,8 @@
     <string name="name_change_success">Display name successfully changed</string>
     <string name="err_msg_password_length">Invalid password</string>
     <string name="exposed">You\'ve been exposed as the slacker</string>
+    <string name="instructions_a">Ask your group admin to add some chores so you can start BOOMing</string>
+    <string name="admin_instructions_a">Add some chores from the menu ↗️ to start BOOMing️</string>
+    <string name="instructions_b">Make sure the admin also adds all your roommates to the group, we don\'t want anyone slacking!</string>
+    <string name="admin_instructions_b">Make sure you also add all your roommates to the group, we don\'t want anyone slacking!</string>
 </resources>

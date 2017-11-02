@@ -64,10 +64,7 @@ public class LoginActivity extends AppCompatActivity {
         btnLinkToSignUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
+                startActivity(new Intent(LoginActivity.this, SignupActivity.class));
             }
         });
 

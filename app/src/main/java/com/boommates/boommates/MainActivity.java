@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -59,10 +60,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SpannableStringBuilder title = new SpannableStringBuilder("BOOMmates");
-        ForegroundColorSpan color = new ForegroundColorSpan(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
-        StyleSpan style = new StyleSpan(android.graphics.Typeface.BOLD);
-        title.setSpan(color, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
-        title.setSpan(style, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        ForegroundColorSpan red = new ForegroundColorSpan(ContextCompat.getColor(MainActivity.this, R.color.colorAccent));
+        StyleSpan bold = new StyleSpan(android.graphics.Typeface.BOLD);
+        title.setSpan(red, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
+        title.setSpan(bold, 0, 4, Spannable.SPAN_INCLUSIVE_INCLUSIVE);
         getSupportActionBar().setTitle(title);
         user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
@@ -177,6 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 if (groupSnap.child("groupMembers").child(user.getUid()).exists()) {
                     final String yourChoreName = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
                     if (!yourChoreName.equals("none")) {
+                        TextViewCompat.setAutoSizeTextTypeWithDefaults(yourChoreView, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                         yourChoreView.setPadding(0, 0, 0, 0);
                         yourChoreView.setText(yourChoreName);
                         final DataSnapshot yourChoreSnap = groupSnap.child("groupChores").child(yourChoreName);
@@ -363,7 +365,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setNoChore() {
-        yourChoreView.setPadding(0, 0, 0, 20);
+        yourChoreView.setPadding(0, 0, 0, 10);
         yourChoreView.setText(getString(R.string.no_chore));
         firstX.setVisibility(View.GONE);
         secondX.setVisibility(View.GONE);
@@ -478,19 +480,47 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void updateChoreView(String groupID) {
+    private void updateChoreView(final String groupID) {
         groupList.child(groupID).child("groupMembers").child(user.getUid()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot userChoreSnap) {
-                String myChore = userChoreSnap.getValue(String.class);
-                if (myChore != null && !myChore.equals("none")) {
-                    ArrayList<String> cleanedChores = new ArrayList<>(chores);
-                    cleanedChores.remove(myChore);
-                    adapter = new ChoreBoomAdapter(cleanedChores);
-                } else {
-                    adapter = new ChoreBoomAdapter(chores);
-                }
-                choreView.setAdapter(adapter);
+                final String myChore = userChoreSnap.getValue(String.class);
+                groupList.child(groupID).child("groupAdmin").addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot groupAdminSnap) {
+                        String instructionsA = getString(R.string.instructions_a);
+                        String instructionsB = getString(R.string.instructions_b);
+                        if (user.getEmail().equals(groupAdminSnap.getValue(String.class))) {
+                            instructionsA = getString(R.string.admin_instructions_a);
+                            instructionsB = getString(R.string.admin_instructions_b);
+                        }
+                        ArrayList<String> fixedChores = new ArrayList<>(chores);
+                        if (myChore != null && !myChore.equals("none")) {
+                            fixedChores.remove(myChore);
+                            if (fixedChores.isEmpty()) {
+                                fixedChores.add(instructionsA);
+                                fixedChores.add(instructionsB);
+                                adapter = new ChoreBoomAdapter(fixedChores, true);
+                            } else {
+                                adapter = new ChoreBoomAdapter(fixedChores, false);
+                            }
+                        } else {
+                            if (fixedChores.isEmpty()) {
+                                fixedChores.add(instructionsA);
+                                fixedChores.add(instructionsB);
+                                adapter = new ChoreBoomAdapter(fixedChores, true);
+                            } else {
+                                adapter = new ChoreBoomAdapter(fixedChores, false);
+                            }
+                        }
+                        choreView.setAdapter(adapter);
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.d(TAG + "Cancelled", databaseError.toString());
+                    }
+                });
             }
 
             @Override
@@ -621,86 +651,99 @@ public class MainActivity extends AppCompatActivity {
 
     class ChoreBoomAdapter extends RecyclerView.Adapter<ChoreBoomAdapter.ViewHolder> {
         private ArrayList<String> chores;
+        private boolean isEmpty;
 
-        ChoreBoomAdapter(ArrayList<String> chores) {
+        ChoreBoomAdapter(ArrayList<String> chores, boolean isEmpty) {
+            this.isEmpty = isEmpty;
             this.chores = chores;
             Collections.sort(this.chores);
         }
 
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-            View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
-            return new ViewHolder(view);
+            if (isEmpty) {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.empty_card, viewGroup, false);
+                return new ViewHolder(view, true);
+
+            } else {
+                View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_card, viewGroup, false);
+                return new ViewHolder(view);
+            }
         }
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-            viewHolder.tv_chore.setText(chores.get(i));
-            viewHolder.button_boom.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    databaseTime.setValue(ServerValue.TIMESTAMP);
-                    databaseTime.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(final DataSnapshot currentTimeSnap) {
-                            final long currentTime = currentTimeSnap.getValue(Long.class);
-                            userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
-                                @Override
-                                public void onDataChange(final DataSnapshot userGroupSnap) {
-                                    final String groupID = userGroupSnap.getValue(String.class);
-                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(DataSnapshot choreSnap) {
-                                            long lastBoomTime = choreSnap.child(user.getUid()).getValue(Long.class);
-                                            long gracePeriodEndTime = choreSnap.child("gracePeriodEnd").getValue(Long.class);
-                                            if ((currentTime - lastBoomTime) < 86400000) {
-                                                Toast toast = Toast.makeText(MainActivity.this, "You have already BOOMed " + chores.get(i) + " within the past 24 hours", Toast.LENGTH_SHORT);
-                                                TextView text = toast.getView().findViewById(android.R.id.message);
-                                                text.setGravity(Gravity.CENTER);
-                                                toast.show();
-                                            } else if (currentTime < gracePeriodEndTime) {
-                                                Toast toast = Toast.makeText(MainActivity.this, chores.get(i) + " is within the 24 hour grace period and cannot be BOOMed", Toast.LENGTH_SHORT);
-                                                TextView text = toast.getView().findViewById(android.R.id.message);
-                                                text.setGravity(Gravity.CENTER);
-                                                toast.show();
-                                            } else {
-                                                int boomNumber = choreSnap.child("boomNumber").getValue(Integer.class);
-                                                if (boomNumber == 1) {
-                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("gracePeriodEnd").setValue(currentTime + 86400000);
-                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime + 86400000);
+            if (!isEmpty) {
+                TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_chore, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                viewHolder.tv_chore.setText(chores.get(i));
+                viewHolder.button_boom.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        databaseTime.setValue(ServerValue.TIMESTAMP);
+                        databaseTime.addListenerForSingleValueEvent(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(final DataSnapshot currentTimeSnap) {
+                                final long currentTime = currentTimeSnap.getValue(Long.class);
+                                userList.child(user.getUid()).child("userGroup").addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(final DataSnapshot userGroupSnap) {
+                                        final String groupID = userGroupSnap.getValue(String.class);
+                                        groupList.child(groupID).child("groupChores").child(chores.get(i)).addListenerForSingleValueEvent(new ValueEventListener() {
+                                            @Override
+                                            public void onDataChange(DataSnapshot choreSnap) {
+                                                long lastBoomTime = choreSnap.child(user.getUid()).getValue(Long.class);
+                                                long gracePeriodEndTime = choreSnap.child("gracePeriodEnd").getValue(Long.class);
+                                                if ((currentTime - lastBoomTime) < 86400000) {
+                                                    Toast toast = Toast.makeText(MainActivity.this, "You have already BOOMed " + chores.get(i) + " within the past 24 hours", Toast.LENGTH_SHORT);
+                                                    TextView text = toast.getView().findViewById(android.R.id.message);
+                                                    text.setGravity(Gravity.CENTER);
+                                                    toast.show();
+                                                } else if (currentTime < gracePeriodEndTime) {
+                                                    Toast toast = Toast.makeText(MainActivity.this, chores.get(i) + " is within the 24 hour grace period and cannot be BOOMed", Toast.LENGTH_SHORT);
+                                                    TextView text = toast.getView().findViewById(android.R.id.message);
+                                                    text.setGravity(Gravity.CENTER);
+                                                    toast.show();
                                                 } else {
-                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime);
+                                                    int boomNumber = choreSnap.child("boomNumber").getValue(Integer.class);
+                                                    if (boomNumber == 1) {
+                                                        groupList.child(groupID).child("groupChores").child(chores.get(i)).child("gracePeriodEnd").setValue(currentTime + 86400000);
+                                                        groupList.child(groupID).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime + 86400000);
+                                                    } else {
+                                                        groupList.child(groupID).child("groupChores").child(chores.get(i)).child("lastBoom").setValue(currentTime);
+                                                    }
+                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child("boomNumber").setValue(boomNumber + 1);
+                                                    groupList.child(groupID).child("groupChores").child(chores.get(i)).child(user.getUid()).setValue(currentTime);
+                                                    Toast toast = Toast.makeText(MainActivity.this, chores.get(i) + " BOOMed", Toast.LENGTH_SHORT);
+                                                    TextView text = toast.getView().findViewById(android.R.id.message);
+                                                    text.setGravity(Gravity.CENTER);
+                                                    toast.show();
                                                 }
-                                                groupList.child(groupID).child("groupChores").child(chores.get(i)).child("boomNumber").setValue(boomNumber + 1);
-                                                groupList.child(groupID).child("groupChores").child(chores.get(i)).child(user.getUid()).setValue(currentTime);
-                                                Toast toast = Toast.makeText(MainActivity.this, chores.get(i) + " BOOMed", Toast.LENGTH_SHORT);
-                                                TextView text = toast.getView().findViewById(android.R.id.message);
-                                                text.setGravity(Gravity.CENTER);
-                                                toast.show();
                                             }
-                                        }
 
-                                        @Override
-                                        public void onCancelled(DatabaseError databaseError) {
-                                            Log.d(TAG + "Cancelled", databaseError.toString());
-                                        }
-                                    });
-                                }
+                                            @Override
+                                            public void onCancelled(DatabaseError databaseError) {
+                                                Log.d(TAG + "Cancelled", databaseError.toString());
+                                            }
+                                        });
+                                    }
 
-                                @Override
-                                public void onCancelled(DatabaseError databaseError) {
-                                    Log.d(TAG + "Cancelled", databaseError.toString());
-                                }
-                            });
-                        }
+                                    @Override
+                                    public void onCancelled(DatabaseError databaseError) {
+                                        Log.d(TAG + "Cancelled", databaseError.toString());
+                                    }
+                                });
+                            }
 
-                        @Override
-                        public void onCancelled(DatabaseError databaseError) {
-                            Log.d(TAG + "Cancelled", databaseError.toString());
-                        }
-                    });
-                }
-            });
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                Log.d(TAG + "Cancelled", databaseError.toString());
+                            }
+                        });
+                    }
+                });
+            } else {
+                viewHolder.tv_chore.setText(chores.get(i));
+            }
         }
 
         @Override
@@ -717,6 +760,11 @@ public class MainActivity extends AppCompatActivity {
                 tv_chore = view.findViewById(R.id.card_name);
                 button_boom = view.findViewById(R.id.card_button);
                 button_boom.setText(R.string.boom);
+            }
+
+            ViewHolder(View view, boolean isEmpty) {
+                super(view);
+                tv_chore = view.findViewById(R.id.card_text);
             }
         }
     }
