@@ -1,4 +1,4 @@
-package com.boommates.boommates;
+package com.boomlabs.boommates;
 
 import org.junit.Test;
 

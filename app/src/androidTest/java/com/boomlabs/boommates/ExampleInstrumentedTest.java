@@ -1,4 +1,4 @@
-package com.boommates.boommates;
+package com.boomlabs.boommates;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

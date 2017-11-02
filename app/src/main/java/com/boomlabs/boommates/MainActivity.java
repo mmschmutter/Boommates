@@ -1,4 +1,4 @@
-package com.boommates.boommates;
+package com.boomlabs.boommates;
 
 import android.content.Intent;
 import android.os.Bundle;
