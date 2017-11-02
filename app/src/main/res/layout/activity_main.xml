@@ -43,7 +43,7 @@
             app:layout_constraintHeight_max="50dp"
             android:fontFamily="sans-serif-light"
             android:gravity="center_horizontal"
-            android:maxLines="1"
+            android:maxLines="2"
             android:textColor="@color/colorText"
             android:textSize="50sp"
             app:layout_constraintLeft_toLeftOf="parent"

@@ -318,7 +318,7 @@ public class ChoreManagerActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-            TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_chore, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+            TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(viewHolder.tv_chore, 15, 35, 10, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
             viewHolder.tv_chore.setText(chores.get(i));
             viewHolder.button_boom.setOnClickListener(new View.OnClickListener() {
                 @Override

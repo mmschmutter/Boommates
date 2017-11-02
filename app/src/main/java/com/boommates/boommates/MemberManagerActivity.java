@@ -282,7 +282,7 @@ public class MemberManagerActivity extends AppCompatActivity {
                     final String userID = userSnap.getKey();
                     final String userName = userSnap.child("userName").getValue(String.class);
                     final String groupID = userSnap.child("userGroup").getValue(String.class);
-                    TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_email, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                    TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(viewHolder.tv_email, 15, 35, 10, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                     viewHolder.tv_email.setText(userName);
                     viewHolder.button_remove.setOnClickListener(new View.OnClickListener() {
                         @Override

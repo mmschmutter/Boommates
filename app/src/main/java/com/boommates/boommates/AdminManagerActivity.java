@@ -153,7 +153,7 @@ public class AdminManagerActivity extends AppCompatActivity {
                     final String userName = userSnap.child("userName").getValue(String.class);
                     final String groupID = userSnap.child("userGroup").getValue(String.class);
                     FirebaseMessaging.getInstance().unsubscribeFromTopic(groupID);
-                    TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_email, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                    TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(viewHolder.tv_email, 15, 35, 10, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                     viewHolder.tv_email.setText(userName);
                     viewHolder.button_set_admin.setOnClickListener(new View.OnClickListener() {
                         @Override

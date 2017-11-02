@@ -42,7 +42,7 @@
             android:fontFamily="sans-serif"
             android:gravity="center_vertical"
             android:maxLines="1"
-            android:paddingRight="10dp"
+            android:paddingEnd="10dp"
             android:textSize="35sp"
             tools:text="Dishes" />
     </RelativeLayout>

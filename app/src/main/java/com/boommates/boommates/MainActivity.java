@@ -178,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
                 if (groupSnap.child("groupMembers").child(user.getUid()).exists()) {
                     final String yourChoreName = groupSnap.child("groupMembers").child(user.getUid()).getValue(String.class);
                     if (!yourChoreName.equals("none")) {
-                        TextViewCompat.setAutoSizeTextTypeWithDefaults(yourChoreView, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                        TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(yourChoreView, 40, 50, 1, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                         yourChoreView.setPadding(0, 0, 0, 0);
                         yourChoreView.setText(yourChoreName);
                         final DataSnapshot yourChoreSnap = groupSnap.child("groupChores").child(yourChoreName);
@@ -674,7 +674,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
             if (!isEmpty) {
-                TextViewCompat.setAutoSizeTextTypeWithDefaults(viewHolder.tv_chore, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
+                TextViewCompat.setAutoSizeTextTypeUniformWithConfiguration(viewHolder.tv_chore, 15, 35, 10, TextViewCompat.AUTO_SIZE_TEXT_TYPE_UNIFORM);
                 viewHolder.tv_chore.setText(chores.get(i));
                 viewHolder.button_boom.setOnClickListener(new View.OnClickListener() {
                     @Override
